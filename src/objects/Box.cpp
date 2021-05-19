@@ -1,6 +1,6 @@
 #include "objects/Box.hpp"
 
-Box::Box(World *w): PVObject(w) {
+Box::Box(World *w): Entity(w) {
     shape.setFillColor(sf::Color::Black);
 }
 

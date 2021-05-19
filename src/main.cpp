@@ -18,7 +18,8 @@ int main() {
                 window.close();
             else if (event.type == sf::Event::MouseButtonPressed) {
                 if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
-                    new Box(&wrld, Vec2(20, 20), (Vec2)sf::Mouse::getPosition(window));
+                    Box *b = new Box(&wrld, Vec2(20, 20), (Vec2)sf::Mouse::getPosition(window));
+                    b->setAnchored(true);
                 } else if (sf::Mouse::isButtonPressed(sf::Mouse::Right)) {
                     new Ball(&wrld, 10.0f, (Vec2)sf::Mouse::getPosition(window));
                 }

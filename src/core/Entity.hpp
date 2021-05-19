@@ -8,7 +8,7 @@
 
 typedef sf::Vector2f Vec2;
 
-class PVObject: public Object {
+class Entity: public Object {
 protected:
     Vec2 position = Vec2(0, 0);
     float angle = 0;
@@ -22,8 +22,8 @@ protected:
     void updateFixture(b2FixtureDef*);
 
 public:
-    PVObject(World *wrld);
-    ~PVObject();
+    Entity(World *wrld);
+    ~Entity();
 
     virtual void render(sf::RenderWindow&);
     

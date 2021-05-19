@@ -5,7 +5,7 @@
 #include <box2d/box2d.h>
 
 class Object;
-class PVObject;
+class Entity;
 
 #define WORLDTICKTMER 1/60.0f
 #define SCALE 30.0f
@@ -17,7 +17,7 @@ class PVObject;
 class World {
 private:
     std::unordered_set<Object*> objs;
-    std::unordered_set<PVObject*> pvObjs;
+    std::unordered_set<Entity*> pvObjs;
     b2World *pWorld;
     b2Vec2 gravity;
     sf::Clock timer;
@@ -30,10 +30,10 @@ public:
     void tick();
 
     void addObject(Object*);
-    void addPVObject(PVObject*);
+    void addEntity(Entity*);
 
     void removeObject(Object*);
-    void removePVObject(PVObject*);
+    void removeEntity(Entity*);
 
     b2World* getWorld();
 };

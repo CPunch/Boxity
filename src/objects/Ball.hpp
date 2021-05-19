@@ -3,9 +3,9 @@
 #include <SFML/Graphics.hpp>
 #include <box2d/box2d.h>
 
-#include "core/PVObject.hpp"
+#include "core/Entity.hpp"
 
-class Ball: public PVObject {
+class Ball: public Entity {
 private:
     sf::CircleShape shape;
     float x, y, radius;

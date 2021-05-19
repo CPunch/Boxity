@@ -1,30 +1,30 @@
-#include "core/PVObject.hpp"
+#include "core/Entity.hpp"
 
-PVObject::PVObject(World *w): Object(w) {
-    w->addPVObject(this);
+Entity::Entity(World *w): Object(w) {
+    w->addEntity(this);
 
     // setup box2d stuff
     createBody();
 }
 
-PVObject::~PVObject() {
+Entity::~Entity() {
     wrld->getWorld()->DestroyBody(body);
-    wrld->removePVObject(this);
+    wrld->removeEntity(this);
 }
 
 // ==================================== [[ SETTERS ]] ====================================
 
-void PVObject::setPosition(sf::Vector2f pos) {
+void Entity::setPosition(sf::Vector2f pos) {
     position = pos;
     update();
 }
 
-void PVObject::setAngle(float a) {
+void Entity::setAngle(float a) {
     angle = a;
     update();
 }
 
-void PVObject::setAnchored(bool a) {
+void Entity::setAnchored(bool a) {
     anchored = a;
     createBody();
     update();
@@ -32,34 +32,34 @@ void PVObject::setAnchored(bool a) {
 
 // ==================================== [[ GETTERS ]] ====================================
 
-Vec2 PVObject::getPosition() {
+Vec2 Entity::getPosition() {
     return position;
 }
 
-float PVObject::getAngle() {
+float Entity::getAngle() {
     return angle;
 }
 
-b2Body* PVObject::getBody() {
+b2Body* Entity::getBody() {
     return body;
 }
 
-bool PVObject::getAnchored() {
+bool Entity::getAnchored() {
     return anchored;
 }
 
 // ==================================== [[ MISC. ]] ====================================
 
 // this should be overwritten
-void PVObject::render(sf::RenderWindow&) {}
+void Entity::render(sf::RenderWindow&) {}
 
 // this should be overwritten so the class can update it's sfml shape
-void PVObject::prerender() {}
+void Entity::prerender() {}
 
 // this should be overwritten so the class can update it's box2d body
-void PVObject::update() {}
+void Entity::update() {}
 
-void PVObject::createBody() {
+void Entity::createBody() {
     // if we already have a body, destroy it
     if (body != nullptr)
         wrld->getWorld()->DestroyBody(body);
@@ -73,7 +73,7 @@ void PVObject::createBody() {
     body = wrld->getWorld()->CreateBody(&myBodyDef);
 }
 
-void PVObject::updateFixture(b2FixtureDef* fixDef) {
+void Entity::updateFixture(b2FixtureDef* fixDef) {
     fixDef->density = 1.0f;
     fixDef->friction = 0.3f;
 
@@ -83,7 +83,7 @@ void PVObject::updateFixture(b2FixtureDef* fixDef) {
     body->CreateFixture(fixDef);
 }
 
-void PVObject::tick() {
+void Entity::tick() {
     // update pos & angle from box2d
     angle = SFMLANGLE(body->GetAngle());
     position = Vec2(BOX2D2SFML(body->GetPosition().x), BOX2D2SFML(body->GetPosition().y));

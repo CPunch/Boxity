@@ -1,6 +1,6 @@
 #include "core/World.hpp"
 #include "core/Object.hpp"
-#include "core/PVObject.hpp"
+#include "core/Entity.hpp"
 
 #include <iostream>
 
@@ -23,7 +23,7 @@ World::~World() {
 }
 
 void World::render(sf::RenderWindow &win) {
-    for (PVObject *obj : pvObjs) {
+    for (Entity *obj : pvObjs) {
         //std::cout << "rendering " << obj << std::endl;
         obj->render(win);
     }
@@ -48,7 +48,7 @@ void World::addObject(Object *obj) {
     objs.insert(obj);
 }
 
-void World::addPVObject(PVObject *obj) {
+void World::addEntity(Entity *obj) {
     pvObjs.insert(obj);
 }
 
@@ -56,7 +56,7 @@ void World::removeObject(Object *obj) {
     objs.erase(obj);
 }
 
-void World::removePVObject(PVObject *obj) {
+void World::removeEntity(Entity *obj) {
     pvObjs.erase(obj);
 }
 

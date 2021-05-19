@@ -2,7 +2,7 @@
 
 #include <iostream>
 
-Ball::Ball(World *w): PVObject(w) {
+Ball::Ball(World *w): Entity(w) {
     shape.setFillColor(sf::Color::Black);
     setRadius(10.0f);
 }

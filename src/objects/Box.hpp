@@ -2,9 +2,9 @@
 
 #include <SFML/Graphics.hpp>
 
-#include "core/PVObject.hpp"
+#include "core/Entity.hpp"
 
-class Box : public PVObject {
+class Box : public Entity {
 private:
     sf::RectangleShape shape;
     Vec2 size = Vec2(10.0f, 10.0f);
