@@ -6,8 +6,8 @@
 
 class Box : public PVObject {
 private:
-    sf::RectangleShape shape;\
-    Vec2 size;
+    sf::RectangleShape shape;
+    Vec2 size = Vec2(10.0f, 10.0f);
 
     void prerender();
     void update();

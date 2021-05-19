@@ -4,6 +4,7 @@
 
 Ball::Ball(World *w): PVObject(w) {
     shape.setFillColor(sf::Color::Black);
+    setRadius(10.0f);
 }
 
 Ball::Ball(World *w, float radi, Vec2 pos): Ball(w) {

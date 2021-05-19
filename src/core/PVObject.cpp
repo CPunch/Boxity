@@ -3,9 +3,6 @@
 PVObject::PVObject(World *w): Object(w) {
     w->addPVObject(this);
 
-    position = Vec2(0, 0);
-    angle = 0;
-
     // setup box2d stuff
     createBody();
 }
@@ -35,7 +32,7 @@ void PVObject::setAnchored(bool a) {
 
 // ==================================== [[ GETTERS ]] ====================================
 
-sf::Vector2f PVObject::getPosition() {
+Vec2 PVObject::getPosition() {
     return position;
 }
 

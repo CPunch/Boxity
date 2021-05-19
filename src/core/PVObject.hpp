@@ -10,7 +10,7 @@ typedef sf::Vector2f Vec2;
 
 class PVObject: public Object {
 protected:
-    Vec2 position;
+    Vec2 position = Vec2(0, 0);
     float angle = 0;
     bool anchored = false;
     b2Body *body = nullptr;
@@ -31,7 +31,7 @@ public:
     void setAngle(float);
     void setAnchored(bool);
 
-    sf::Vector2f getPosition();
+    Vec2 getPosition();
     float getAngle();
     b2Body* getBody();
     bool getAnchored();

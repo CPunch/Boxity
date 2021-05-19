@@ -12,6 +12,7 @@ int main() {
 
     while (window.isOpen()) {
         sf::Event event;
+
         while (window.pollEvent(event)) {
             if (event.type == sf::Event::Closed)
                 window.close();
@@ -19,7 +20,7 @@ int main() {
                 if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
                     new Box(&wrld, Vec2(20, 20), (Vec2)sf::Mouse::getPosition(window));
                 } else if (sf::Mouse::isButtonPressed(sf::Mouse::Right)) {
-                    new Ball(&wrld, 20.0f, (Vec2)sf::Mouse::getPosition(window));
+                    new Ball(&wrld, 10.0f, (Vec2)sf::Mouse::getPosition(window));
                 }
             }
         }
