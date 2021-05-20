@@ -3,8 +3,8 @@
 #include <SFML/Graphics.hpp>
 #include <box2d/box2d.h>
 
-#include "core/World.hpp"
 #include "core/Object.hpp"
+#include "core/Root.hpp"
 
 typedef sf::Vector2f Vec2;
 

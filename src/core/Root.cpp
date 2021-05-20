@@ -1,10 +1,10 @@
-#include "core/World.hpp"
+#include "core/Root.hpp"
 #include "core/Object.hpp"
 #include "core/Entity.hpp"
 
 #include <iostream>
 
-World::World(): Object(nullptr) {
+Root::Root(): Object(nullptr) {
     // set our object feature flags
     addFlag(typeFlags, RENDEROBJ);
     addFlag(typeFlags, PHYSICOBJ);
@@ -16,14 +16,14 @@ World::World(): Object(nullptr) {
     timer.restart();
 }
 
-World::~World() {
+Root::~Root() {
     delete pWorld;
 }
 
-void World::tick() {
-    // we rate limit tick to 60 times a second (or whatever ratio WORLDTICKTMER is)
+void Root::tick() {
+    // we rate limit tick to 60 times a second (or whatever ratio ROOTTICKTMER is)
     sf::Time deltaTime = timer.getElapsedTime();
-    if (deltaTime.asSeconds() > WORLDTICKTMER) {
+    if (deltaTime.asSeconds() > ROOTTICKTMER) {
         pWorld->Step(deltaTime.asSeconds(), 6, 2);
 
         // tick all objects
@@ -35,6 +35,6 @@ void World::tick() {
     }
 }
 
-b2World* World::getWorld() {
+b2World* Root::getWorld() {
     return pWorld;
 }

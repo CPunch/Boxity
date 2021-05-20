@@ -1,4 +1,4 @@
-#include "core/World.hpp"
+#include "core/Root.hpp"
 #include "core/Entity.hpp"
 
 Entity::Entity(Object *p): Object(p) {
