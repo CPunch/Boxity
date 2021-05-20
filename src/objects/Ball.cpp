@@ -2,12 +2,12 @@
 
 #include <iostream>
 
-Ball::Ball(World *w): Entity(w) {
+Ball::Ball(Object *p): Entity(p) {
     shape.setFillColor(sf::Color::Black);
     setRadius(10.0f);
 }
 
-Ball::Ball(World *w, float radi, Vec2 pos): Ball(w) {
+Ball::Ball(Object *p, float radi, Vec2 pos): Ball(p) {
     position = pos;
     setRadius(radi);
 }

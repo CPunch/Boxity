@@ -1,15 +1,35 @@
+#include "core/World.hpp"
 #include "core/Entity.hpp"
 
-Entity::Entity(World *w): Object(w) {
-    w->addEntity(this);
+Entity::Entity(Object *p): Object(p) {
+    // set our object feature flags
+    addFlag(typeFlags, RENDEROBJ);
+    addFlag(typeFlags, PHYSICOBJ);
 
     // setup box2d stuff
     createBody();
 }
 
 Entity::~Entity() {
-    wrld->getWorld()->DestroyBody(body);
-    wrld->removeEntity(this);
+    
+}
+
+void Entity::onParentRemove() {
+    b2World *wrld = getWorld();
+
+    // sanity check
+    if (wrld == nullptr)
+        return;
+
+    // if we already have a body, destroy it
+    if (body != nullptr)
+        wrld->DestroyBody(body);
+
+    body = nullptr;
+}
+
+void Entity::onParentAdd() {
+    createBody();
 }
 
 // ==================================== [[ SETTERS ]] ====================================
@@ -50,19 +70,22 @@ bool Entity::getAnchored() {
 
 // ==================================== [[ MISC. ]] ====================================
 
-// this should be overwritten
-void Entity::render(sf::RenderWindow&) {}
-
 // this should be overwritten so the class can update it's sfml shape
 void Entity::prerender() {}
 
 // this should be overwritten so the class can update it's box2d body
 void Entity::update() {}
 
-void Entity::createBody() {
+bool Entity::createBody() {
+    b2World *wrld = getWorld();
+
+    // sanity check
+    if (wrld == nullptr)
+        return false;
+
     // if we already have a body, destroy it
     if (body != nullptr)
-        wrld->getWorld()->DestroyBody(body);
+        wrld->DestroyBody(body);
 
     // create body defintion & set
     b2BodyDef myBodyDef;
@@ -70,20 +93,27 @@ void Entity::createBody() {
     myBodyDef.position.Set(SFML2BOX2D(position.x), SFML2BOX2D(position.y));
     myBodyDef.angle = BOX2DANGLE(angle);
 
-    body = wrld->getWorld()->CreateBody(&myBodyDef);
+    body = wrld->CreateBody(&myBodyDef);
+    return true;
 }
 
 void Entity::updateFixture(b2FixtureDef* fixDef) {
     fixDef->density = 1.0f;
     fixDef->friction = 0.3f;
 
-    createBody();
+    // if createBody fails, it means we don't have a world parent
+    if (!createBody())
+        return;
 
     body->SetTransform(b2Vec2(SFML2BOX2D(position.x), SFML2BOX2D(position.y)), angle);
     body->CreateFixture(fixDef);
 }
 
 void Entity::tick() {
+    // sanity check
+    if (body == nullptr)
+        return;
+
     // update pos & angle from box2d
     angle = SFMLANGLE(body->GetAngle());
     position = Vec2(BOX2D2SFML(body->GetPosition().x), BOX2D2SFML(body->GetPosition().y));

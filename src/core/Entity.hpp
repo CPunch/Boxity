@@ -18,14 +18,16 @@ protected:
     virtual void prerender();
     virtual void update();
 
-    void createBody();
+    // custom events
+    void onParentRemove();
+    void onParentAdd();
+
+    bool createBody();
     void updateFixture(b2FixtureDef*);
 
 public:
-    Entity(World *wrld);
+    Entity(Object *parent);
     ~Entity();
-
-    virtual void render(sf::RenderWindow&);
     
     void setPosition(Vec2);
     void setAngle(float);
@@ -33,8 +35,8 @@ public:
 
     Vec2 getPosition();
     float getAngle();
-    b2Body* getBody();
     bool getAnchored();
+    b2Body* getBody();
 
     void tick();
 };

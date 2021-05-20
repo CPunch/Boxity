@@ -4,29 +4,20 @@
 
 #include <iostream>
 
-World::World() {
-    gravity = b2Vec2(0, 10.0f);
+World::World(): Object(nullptr) {
+    // set our object feature flags
+    addFlag(typeFlags, RENDEROBJ);
+    addFlag(typeFlags, PHYSICOBJ);
 
     // create box2d world
+    gravity = b2Vec2(0, 10.0f);
     pWorld = new b2World(gravity);
 
     timer.restart();
 }
 
 World::~World() {
-    // make a clone since the real objs set will change while iterating
-    std::unordered_set<Object*> _objs = objs;
-
-    for (Object *obj : _objs) {
-        delete obj;
-    }
-}
-
-void World::render(sf::RenderWindow &win) {
-    for (Entity *obj : pvObjs) {
-        //std::cout << "rendering " << obj << std::endl;
-        obj->render(win);
-    }
+    delete pWorld;
 }
 
 void World::tick() {
@@ -36,28 +27,12 @@ void World::tick() {
         pWorld->Step(deltaTime.asSeconds(), 6, 2);
 
         // tick all objects
-        for (Object *obj : objs) {
-            obj->tick();
+        for (Object *child : Object::children) {
+            child->tick();
         }
 
         timer.restart();
     }
-}
-
-void World::addObject(Object *obj) {
-    objs.insert(obj);
-}
-
-void World::addEntity(Entity *obj) {
-    pvObjs.insert(obj);
-}
-
-void World::removeObject(Object *obj) {
-    objs.erase(obj);
-}
-
-void World::removeEntity(Entity *obj) {
-    pvObjs.erase(obj);
 }
 
 b2World* World::getWorld() {

@@ -13,8 +13,8 @@ private:
     void update();
 
 public:
-    Box(World *wrld);
-    Box(World *wrld, Vec2 size, Vec2 pos);
+    Box(Object *parent);
+    Box(Object *parent, Vec2 size, Vec2 pos);
 
     void setSize(Vec2);
     Vec2 getSize();

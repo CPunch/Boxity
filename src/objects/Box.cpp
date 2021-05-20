@@ -1,10 +1,10 @@
 #include "objects/Box.hpp"
 
-Box::Box(World *w): Entity(w) {
+Box::Box(Object *p): Entity(p) {
     shape.setFillColor(sf::Color::Black);
 }
 
-Box::Box(World *w, Vec2 sz, Vec2 pos): Box(w) {
+Box::Box(Object *p, Vec2 sz, Vec2 pos): Box(p) {
     position = pos;
     setSize(sz);
 }
