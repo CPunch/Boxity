@@ -19,6 +19,8 @@ void PhysicsService::tick(float dt) {
     pWorld->Step(dt, 6, 2);
 }
 
+// ==================================== [[ GETTERS ]] ====================================
+
 b2World* PhysicsService::getWorld() {
     return pWorld;
 }

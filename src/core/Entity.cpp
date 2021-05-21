@@ -55,7 +55,7 @@ _passOPAEvnt:
 
 // ==================================== [[ SETTERS ]] ====================================
 
-void Entity::setPosition(sf::Vector2f pos) {
+void Entity::setPosition(Vec2 pos) {
     position = pos;
     update();
 }
