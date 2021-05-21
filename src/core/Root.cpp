@@ -2,39 +2,49 @@
 #include "core/Object.hpp"
 #include "core/Entity.hpp"
 
-#include <iostream>
+#include "services/PhysicsService.hpp"
 
 Root::Root(): Object(nullptr) {
     // set our object feature flags
     addFlag(typeFlags, RENDEROBJ);
     addFlag(typeFlags, PHYSICOBJ);
 
-    // create box2d world
-    gravity = b2Vec2(0, 10.0f);
-    pWorld = new b2World(gravity);
-
     timer.restart();
-}
 
-Root::~Root() {
-    delete pWorld;
+    // initalize the loaded services table
+    for (int i = 0; i < MAXSRV; i++)
+        loadedServices[i] = nullptr;
 }
 
 void Root::tick() {
     // we rate limit tick to 60 times a second (or whatever ratio ROOTTICKTMER is)
     sf::Time deltaTime = timer.getElapsedTime();
     if (deltaTime.asSeconds() > ROOTTICKTMER) {
-        pWorld->Step(deltaTime.asSeconds(), 6, 2);
 
         // tick all objects
         for (Object *child : Object::children) {
-            child->tick();
+            child->tick(deltaTime.asSeconds());
         }
 
         timer.restart();
     }
 }
 
-b2World* Root::getWorld() {
-    return pWorld;
+Root* Root::getRoot() {
+    return this;
+}
+
+Service* Root::getService(SRVICETYPE srvc) {
+    if (loadedServices[srvc] != nullptr)
+        return loadedServices[srvc];
+
+    // service isn't loaded, load it
+    switch(srvc) {
+        case RENDERSRV: // stubbed
+            return nullptr;
+        case PHYSICSRV:
+            return loadedServices[srvc] = new PhysicsService(this);
+        default:
+            return nullptr;
+    }
 }

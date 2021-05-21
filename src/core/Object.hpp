@@ -8,6 +8,7 @@
 enum OBJTYPE {
     RENDEROBJ  = 1,
     PHYSICOBJ  = 2,
+    SERVICEOBJ = 4
 };
 
 typedef uint8_t iOBJTYPE;
@@ -16,10 +17,12 @@ typedef uint8_t iOBJTYPE;
 #define isPhysical(x)   (((Object*)x)->getTypeFlags() & PHYSICOBJ)
 #define addFlag(x,flag) x |= flag
 
+class Root;
 class Object {
 protected:
     std::unordered_set<Object*> children;
     Object *parent = nullptr;
+    Root *root = nullptr;
     iOBJTYPE typeFlags = 0;
 
     void addChild(Object*);
@@ -37,8 +40,8 @@ public:
 
     Object* getParent();
     iOBJTYPE getTypeFlags();
-    virtual b2World* getWorld();
+    virtual Root* getRoot();
 
-    virtual void tick();
+    virtual void tick(float);
     virtual void render(sf::RenderWindow&);
 };

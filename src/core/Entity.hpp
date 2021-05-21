@@ -5,15 +5,17 @@
 
 #include "core/Object.hpp"
 #include "core/Root.hpp"
+#include "services/PhysicsService.hpp"
 
 typedef sf::Vector2f Vec2;
 
 class Entity: public Object {
 protected:
+    PhysicsService *pSrvc = nullptr;
+    b2Body *body = nullptr;
     Vec2 position = Vec2(0, 0);
     float angle = 0;
     bool anchored = false;
-    b2Body *body = nullptr;
 
     virtual void prerender();
     virtual void update();
@@ -38,5 +40,5 @@ public:
     bool getAnchored();
     b2Body* getBody();
 
-    void tick();
+    void tick(float);
 };

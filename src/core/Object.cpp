@@ -14,8 +14,19 @@ Object::~Object() {
     }
 }
 
-void Object::onParentAdd() {}
-void Object::onParentRemove() {}
+void Object::onParentRemove() {
+    // let the children know
+    for (Object *child : children) {
+        child->onParentRemove();
+    }
+}
+
+void Object::onParentAdd() {
+    // let the children know
+    for (Object *child : children) {
+        child->onParentAdd();
+    }
+}
 
 // ==================================== [[ SETTERS ]] ====================================
 
@@ -31,6 +42,7 @@ void Object::setParent(Object *p) {
     }
 
     parent = p;
+    root = getRoot();
 
     // add ourselves to our new parent
     if (p != nullptr) {
@@ -49,11 +61,8 @@ iOBJTYPE Object::getTypeFlags() {
     return typeFlags;
 }
 
-b2World* Object::getWorld() {
-    if (parent != nullptr && isPhysical(parent))
-        return parent->getWorld();
-    // else if the parent isn't a physical object, return a nullptr
-    return nullptr;
+Root* Object::getRoot() {
+    return (parent != nullptr) ? parent->getRoot() : nullptr;
 }
 
 // ==================================== [[ MISC. ]] ====================================
@@ -66,9 +75,9 @@ void Object::removeChild(Object *c) {
     children.erase(c);
 }
 
-void Object::tick() {
+void Object::tick(float dt) {
     for (Object *child : children) {
-        child->tick();
+        child->tick(dt);
     }
 }
 

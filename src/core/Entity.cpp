@@ -6,7 +6,12 @@ Entity::Entity(Object *p): Object(p) {
     addFlag(typeFlags, RENDEROBJ);
     addFlag(typeFlags, PHYSICOBJ);
 
-    // setup box2d stuff
+    // sanity check
+    if (root == nullptr)
+        return;
+
+    // grab the physics service & then create our new body
+    pSrvc = (PhysicsService*)root->getService(PHYSICSRV);
     createBody();
 }
 
@@ -15,21 +20,37 @@ Entity::~Entity() {
 }
 
 void Entity::onParentRemove() {
-    b2World *wrld = getWorld();
+    b2World *wrld;
 
     // sanity check
-    if (wrld == nullptr)
-        return;
+    if (pSrvc == nullptr)
+        goto _rmvBody;
+
+    wrld = pSrvc->getWorld();
 
     // if we already have a body, destroy it
     if (body != nullptr)
         wrld->DestroyBody(body);
 
+_rmvBody:
     body = nullptr;
+
+    // pass the event down
+    Object::onParentRemove();
 }
 
 void Entity::onParentAdd() {
+    // sanity check
+    if (root == nullptr)
+        goto _passOPAEvnt;
+
+    // grab the physics service & then create our new body
+    pSrvc = (PhysicsService*)root->getService(PHYSICSRV);
     createBody();
+
+_passOPAEvnt:
+    // pass the event down
+    Object::onParentAdd();
 }
 
 // ==================================== [[ SETTERS ]] ====================================
@@ -77,11 +98,11 @@ void Entity::prerender() {}
 void Entity::update() {}
 
 bool Entity::createBody() {
-    b2World *wrld = getWorld();
-
     // sanity check
-    if (wrld == nullptr)
+    if (pSrvc == nullptr)
         return false;
+
+    b2World *wrld = pSrvc->getWorld();
 
     // if we already have a body, destroy it
     if (body != nullptr)
@@ -109,7 +130,7 @@ void Entity::updateFixture(b2FixtureDef* fixDef) {
     body->CreateFixture(fixDef);
 }
 
-void Entity::tick() {
+void Entity::tick(float) {
     // sanity check
     if (body == nullptr)
         return;

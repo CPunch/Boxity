@@ -4,6 +4,7 @@
 #include <box2d/box2d.h>
 
 #include "core/Object.hpp"
+#include "core/Service.hpp"
 
 #define ROOTTICKTMER 1/60.0f
 #define SCALE 30.0f
@@ -13,16 +14,14 @@
 #define SFMLANGLE(x)  180/b2_pi*(x)
 
 class Root : public Object {
-private:
-    b2World *pWorld;
-    b2Vec2 gravity;
+    Service* loadedServices[MAXSRV];
     sf::Clock timer;
 
 public:
     Root();
-    ~Root();
 
     void tick();
 
-    b2World* getWorld();
+    Root* getRoot();
+    Service* getService(SRVICETYPE);
 };
