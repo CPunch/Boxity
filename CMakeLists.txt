@@ -2,7 +2,6 @@ cmake_minimum_required(VERSION 3.13)
 project(SimplEngi)
 
 set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_BUILD_TYPE Debug)
 
 set(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake-modules")
 set(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake-modules/sanitizers-cmake/cmake" ${CMAKE_MODULE_PATH})

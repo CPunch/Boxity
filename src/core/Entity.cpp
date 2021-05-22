@@ -33,7 +33,7 @@ void Entity::onParentAdd() {
 
 
     // grab the physics service & then create our new body
-    pSrvc = (PhysicsService*)root->getService(PHYSICSRV);
+    pSrvc = (PhysicsService*)castObjPtr(root, Root)->getService(PHYSICSRV);
     update();
 
 _passEOPAEvnt:

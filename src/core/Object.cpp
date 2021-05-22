@@ -1,8 +1,8 @@
 #include "core/Object.hpp"
 
-Object::Object() {
+Object::Object() {}
 
-}
+Object::~Object() {}
 
 void Object::onParentRemove() {
     // let the children know
@@ -28,18 +28,20 @@ void Object::setParent(ObjectPtr p) {
     ObjectPtr oldP = parent;
     parent = p;
 
-    // remove ourselves from our old parent
-    if (oldP.get() != nullptr) {
-        onParentRemove();
-        oldP->removeChild(shared_from_this());
-    }
+    onParentRemove();
 
     root = getRoot();
 
     // add ourselves to our new parent
     if (parent.get() != nullptr) {
         parent->addChild(shared_from_this());
-        onParentAdd();
+    }
+
+    onParentAdd();
+
+    // remove ourselves from our old parent (for real this time)
+    if (oldP.get() != nullptr) {
+        oldP->removeChild(shared_from_this());
     }
 }
 
@@ -53,19 +55,23 @@ iOBJTYPE Object::getTypeFlags() {
     return typeFlags;
 }
 
-Root* Object::getRoot() {
+ObjectPtr Object::getRoot() {
+    // return our cached copy of root if we have it :)
+    if (root.get() != nullptr)
+        return root;
+
     return (parent != nullptr) ? parent->getRoot() : nullptr;
 }
 
 // ==================================== [[ MISC. ]] ====================================
 
 void Object::remove() {
-    setParent(nullptr);
-
     // remove all children
     for (auto iter = children.begin(); iter != children.end();) {
-        (*iter)->remove();
+        (*iter++)->remove();
     }
+
+    setParent(nullptr);
 }
 
 void Object::addChild(ObjectPtr c) {

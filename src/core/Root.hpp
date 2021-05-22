@@ -22,6 +22,6 @@ public:
 
     void tick();
 
-    Root* getRoot();
+    ObjectPtr getRoot();
     Service* getService(SRVICETYPE);
 };

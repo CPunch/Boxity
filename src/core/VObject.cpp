@@ -23,7 +23,7 @@ void VObject::onParentAdd() {
         goto _passVOPAEvnt;
 
     // grab the render service
-    rSrvc = (RenderService*)root->getService(RENDERSRV);
+    rSrvc = (RenderService*)castObjPtr(root, Root)->getService(RENDERSRV);
 
     if (rSrvc == nullptr)
         goto _passVOPAEvnt;

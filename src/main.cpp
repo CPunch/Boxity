@@ -2,8 +2,9 @@
 
 #include "services/RenderService.hpp"
 #include "objects/Box.hpp"
+#include "objects/Ball.hpp"
 
-#include <vector>
+#include <iostream>
 
 int main() {
     std::shared_ptr<Root> root = std::make_shared<Root>();
@@ -12,6 +13,10 @@ int main() {
     std::shared_ptr<Box> ground = std::make_shared<Box>(Vec2(400, 50), Vec2(200, 400));
     ground->setAnchored(true);
     ground->setParent(root);
+
+    std::shared_ptr<Ball> b = std::make_shared<Ball>(10.0f, Vec2(200, 100));
+    b->setAnchored(false);
+    b->setParent(root);
 
     while (rSrvc->isOpen()) {
         rSrvc->pollEvents();
@@ -23,5 +28,7 @@ int main() {
         rSrvc->render();
     }
 
+    root->remove();
+    std::cout << "root removed!" << std::endl;
     return 0;
 }

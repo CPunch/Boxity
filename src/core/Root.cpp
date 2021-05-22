@@ -32,8 +32,8 @@ void Root::tick() {
 
 // ==================================== [[ GETTERS ]] ====================================
 
-Root* Root::getRoot() {
-    return this;
+ObjectPtr Root::getRoot() {
+    return shared_from_this();
 }
 
 Service* Root::getService(SRVICETYPE srvc) {

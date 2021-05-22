@@ -3,12 +3,13 @@
 #include <iostream>
 
 PhysicsService::PhysicsService(): Service() {
-    std::cout << "PhysicsService loaded!" << std::endl;
     srvType = PHYSICSRV;
 
     // create box2d world
     gravity = b2Vec2(0, 10.0f);
     pWorld = new b2World(gravity);
+
+    std::cout << "PhysicsService loaded!" << std::endl;
 }
 
 PhysicsService::~PhysicsService() {

@@ -19,13 +19,14 @@ typedef uint8_t iOBJTYPE;
 #define isRenderable(x) (x->getTypeFlags() & RENDEROBJ)
 #define isPhysical(x)   (x->getTypeFlags() & PHYSICOBJ)
 #define addFlag(x,flag) x |= flag
+#define castObjPtr(x, type) ((type*)(x).get())
 
 class Root;
 class Object : public std::enable_shared_from_this<Object> {
 protected:
     std::unordered_set<ObjectPtr> children;
     ObjectPtr parent = nullptr;
-    Root *root = nullptr;
+    ObjectPtr root = nullptr;
     iOBJTYPE typeFlags = 0;
 
     void addChild(ObjectPtr);
@@ -37,12 +38,13 @@ protected:
 
 public:
     Object();
+    ~Object();
 
     void setParent(ObjectPtr);
 
     Object* getParent();
     iOBJTYPE getTypeFlags();
-    virtual Root* getRoot();
+    virtual ObjectPtr getRoot();
 
     void remove();
     virtual void tick(float);

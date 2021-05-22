@@ -8,16 +8,16 @@
 
 struct zIndxOrder {
     bool operator() (const ObjectPtr obj1, const ObjectPtr obj2) const {
-        return ((VObject*)(obj1.get()))->getZIndex() > ((VObject*)(obj2.get()))->getZIndex();
+        return castObjPtr(obj1, VObject)->getZIndex() > castObjPtr(obj2, VObject)->getZIndex();
     }
 };
 
 class RenderService : public Service {
 private:
-    sf::RenderWindow *window;
     std::multiset<ObjectPtr, zIndxOrder> rndrList; 
 
 public:
+    sf::RenderWindow *window;
     RenderService();
 
     // these ONLY ACCEPT VObject* !!!!!
