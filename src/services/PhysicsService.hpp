@@ -10,7 +10,7 @@ private:
     b2Vec2 gravity;
 
 public:
-    PhysicsService(Object *parent);
+    PhysicsService();
     ~PhysicsService();
 
     void tick(float);

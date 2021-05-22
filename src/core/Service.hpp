@@ -13,7 +13,7 @@ protected:
     SRVICETYPE srvType;
 
 public:
-    Service(Object *parent);
+    Service();
 
     SRVICETYPE getServiceType();
 };

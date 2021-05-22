@@ -1,22 +1,10 @@
 #include "core/Root.hpp"
 #include "core/Entity.hpp"
 
-Entity::Entity(Object *p): Object(p) {
+Entity::Entity(): Object() {
     // set our object feature flags
     addFlag(typeFlags, RENDEROBJ);
     addFlag(typeFlags, PHYSICOBJ);
-
-    // sanity check
-    if (root == nullptr)
-        return;
-
-    // grab the physics service & then create our new body
-    pSrvc = (PhysicsService*)root->getService(PHYSICSRV);
-    createBody();
-}
-
-Entity::~Entity() {
-    
 }
 
 void Entity::onParentRemove() {
@@ -46,7 +34,7 @@ void Entity::onParentAdd() {
 
     // grab the physics service & then create our new body
     pSrvc = (PhysicsService*)root->getService(PHYSICSRV);
-    createBody();
+    update();
 
 _passOPAEvnt:
     // pass the event down

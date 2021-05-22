@@ -14,7 +14,7 @@
 #define SFMLANGLE(x)  180/b2_pi*(x)
 
 class Root : public Object {
-    Service* loadedServices[MAXSRV];
+    std::shared_ptr<Service> loadedServices[MAXSRV];
     sf::Clock timer;
 
 public:

@@ -1,6 +1,6 @@
 #include "core/Service.hpp"
 
-Service::Service(Object *p) : Object(p) {
+Service::Service(): Object() {
     
 }
 

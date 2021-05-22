@@ -4,7 +4,7 @@
 
 #include "services/PhysicsService.hpp"
 
-Root::Root(): Object(nullptr) {
+Root::Root(): Object() {
     // set our object feature flags
     addFlag(typeFlags, RENDEROBJ);
     addFlag(typeFlags, PHYSICOBJ);
@@ -20,9 +20,8 @@ void Root::tick() {
     // we rate limit tick to 60 times a second (or whatever ratio ROOTTICKTMER is)
     sf::Time deltaTime = timer.getElapsedTime();
     if (deltaTime.asSeconds() > ROOTTICKTMER) {
-
         // tick all objects
-        for (Object *child : Object::children) {
+        for (ObjectPtr child : Object::children) {
             child->tick(deltaTime.asSeconds());
         }
 
@@ -38,14 +37,16 @@ Root* Root::getRoot() {
 
 Service* Root::getService(SRVICETYPE srvc) {
     if (loadedServices[srvc] != nullptr)
-        return loadedServices[srvc];
+        return loadedServices[srvc].get();
 
     // service isn't loaded, load it
     switch(srvc) {
         case RENDERSRV: // stubbed
             return nullptr;
         case PHYSICSRV:
-            return loadedServices[srvc] = new PhysicsService(this);
+            loadedServices[srvc] = std::make_shared<PhysicsService>();
+            loadedServices[srvc]->setParent(shared_from_this());
+            return loadedServices[srvc].get();
         default:
             return nullptr;
     }

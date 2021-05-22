@@ -28,9 +28,8 @@ protected:
     void updateFixture(b2FixtureDef*);
 
 public:
-    Entity(Object *parent);
-    ~Entity();
-    
+    Entity();
+
     void setPosition(Vec2);
     void setAngle(float);
     void setAnchored(bool);

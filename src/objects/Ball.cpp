@@ -1,13 +1,11 @@
 #include "objects/Ball.hpp"
 
-#include <iostream>
-
-Ball::Ball(Object *p): Entity(p) {
+Ball::Ball(): Entity() {
     shape.setFillColor(sf::Color::Black);
     setRadius(10.0f);
 }
 
-Ball::Ball(Object *p, float radi, Vec2 pos): Ball(p) {
+Ball::Ball(float radi, Vec2 pos): Ball() {
     position = pos;
     setRadius(radi);
 }

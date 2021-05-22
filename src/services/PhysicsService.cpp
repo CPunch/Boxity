@@ -2,7 +2,7 @@
 
 #include <iostream>
 
-PhysicsService::PhysicsService(Object *p): Service(p) {
+PhysicsService::PhysicsService(): Service() {
     std::cout << "PhysicsService loaded!" << std::endl;
     srvType = PHYSICSRV;
 

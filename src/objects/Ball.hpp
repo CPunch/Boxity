@@ -14,8 +14,8 @@ private:
     void update();
 
 public:
-    Ball(Object *parent);
-    Ball(Object *parent, float radi, Vec2 pos);
+    Ball();
+    Ball(float radi, Vec2 pos);
 
     void setRadius(float);
 

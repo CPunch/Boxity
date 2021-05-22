@@ -1,52 +1,44 @@
 #include "core/Object.hpp"
 
-Object::Object(Object *p) {
-    setParent(p);
-}
+Object::Object() {
 
-Object::~Object() {
-    setParent(nullptr);
-
-    // delete all children
-    auto _children = children; // make a copy of children since it'll change as we iterate over it
-    for (Object *child : _children) {
-        delete child;
-    }
 }
 
 void Object::onParentRemove() {
     // let the children know
-    for (Object *child : children) {
+    for (ObjectPtr child : children) {
         child->onParentRemove();
     }
 }
 
 void Object::onParentAdd() {
     // let the children know
-    for (Object *child : children) {
+    for (ObjectPtr child : children) {
         child->onParentAdd();
     }
 }
 
 // ==================================== [[ SETTERS ]] ====================================
 
-void Object::setParent(Object *p) {
+void Object::setParent(ObjectPtr p) {
     // minor optimization
-    if (p == parent)
+    if (p.get() == parent.get())
         return;
 
+    ObjectPtr oldP = parent;
+    parent = p;
+
     // remove ourselves from our old parent
-    if (parent != nullptr) {
+    if (oldP.get() != nullptr) {
         onParentRemove();
-        parent->removeChild(this);
+        oldP->removeChild(shared_from_this());
     }
 
-    parent = p;
     root = getRoot();
 
     // add ourselves to our new parent
-    if (p != nullptr) {
-        p->addChild(this);
+    if (parent.get() != nullptr) {
+        parent->addChild(shared_from_this());
         onParentAdd();
     }
 }
@@ -54,7 +46,7 @@ void Object::setParent(Object *p) {
 // ==================================== [[ GETTERS ]] ====================================
 
 Object* Object::getParent() {
-    return parent;
+    return parent.get();
 }
 
 iOBJTYPE Object::getTypeFlags() {
@@ -67,23 +59,32 @@ Root* Object::getRoot() {
 
 // ==================================== [[ MISC. ]] ====================================
 
-void Object::addChild(Object *c) {
+void Object::remove() {
+    setParent(nullptr);
+
+    // remove all children
+    for (auto iter = children.begin(); iter != children.end();) {
+        (*iter)->remove();
+    }
+}
+
+void Object::addChild(ObjectPtr c) {
     children.insert(c);
 }
 
-void Object::removeChild(Object *c) {
+void Object::removeChild(ObjectPtr c) {
     children.erase(c);
 }
 
 void Object::tick(float dt) {
-    for (Object *child : children) {
+    for (ObjectPtr child : children) {
         child->tick(dt);
     }
 }
 
 void Object::render(sf::RenderWindow &win) {
     // if any of our children are renderable, render them
-    for (Object *child : children) {
+    for (ObjectPtr child : children) {
         if (isRenderable(child))
             child->render(win);
     }

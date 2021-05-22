@@ -4,6 +4,7 @@
 #include <box2d/box2d.h>
 #include <unordered_set>
 #include <inttypes.h>
+#include <memory>
 
 enum OBJTYPE {
     RENDEROBJ  = 1,
@@ -11,37 +12,39 @@ enum OBJTYPE {
     SERVICEOBJ = 4
 };
 
+class Object;
+typedef std::shared_ptr<Object> ObjectPtr;
 typedef uint8_t iOBJTYPE;
 
-#define isRenderable(x) (((Object*)x)->getTypeFlags() & RENDEROBJ)
-#define isPhysical(x)   (((Object*)x)->getTypeFlags() & PHYSICOBJ)
+#define isRenderable(x) (x->getTypeFlags() & RENDEROBJ)
+#define isPhysical(x)   (x->getTypeFlags() & PHYSICOBJ)
 #define addFlag(x,flag) x |= flag
 
 class Root;
-class Object {
+class Object : public std::enable_shared_from_this<Object> {
 protected:
-    std::unordered_set<Object*> children;
-    Object *parent = nullptr;
+    std::unordered_set<ObjectPtr> children;
+    ObjectPtr parent = nullptr;
     Root *root = nullptr;
     iOBJTYPE typeFlags = 0;
 
-    void addChild(Object*);
-    void removeChild(Object*);
+    void addChild(ObjectPtr);
+    void removeChild(ObjectPtr);
 
     // events
     virtual void onParentRemove(); // called before child is removed from parent
     virtual void onParentAdd(); // called after child is added to parent
 
 public:
-    Object(Object *p);
-    ~Object();
+    Object();
 
-    void setParent(Object*);
+    void setParent(ObjectPtr);
 
     Object* getParent();
     iOBJTYPE getTypeFlags();
     virtual Root* getRoot();
 
+    void remove();
     virtual void tick(float);
     virtual void render(sf::RenderWindow&);
 };
