@@ -81,11 +81,3 @@ void Object::tick(float dt) {
         child->tick(dt);
     }
 }
-
-void Object::render(sf::RenderWindow &win) {
-    // if any of our children are renderable, render them
-    for (ObjectPtr child : children) {
-        if (isRenderable(child))
-            child->render(win);
-    }
-}

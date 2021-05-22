@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 3.13)
 project(SimplEngi)
 
 set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_BUILD_TYPE Debug)
 
 set(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake-modules")
 set(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake-modules/sanitizers-cmake/cmake" ${CMAKE_MODULE_PATH})
@@ -19,13 +20,13 @@ set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT s
 find_package(SFML 2.5 COMPONENTS graphics audio REQUIRED)
 
 # adds address sanitizer support :)
-#find_package(Sanitizers)
+find_package(Sanitizers)
 
 include_directories(src ${SFML_INCLUDE_DIR})
 file(GLOB_RECURSE SOURCES src/**.[ch]pp)
 
 add_executable(simplengi ${SOURCES})
-#add_sanitizers(simplengi)
+add_sanitizers(simplengi)
 set_target_properties(simplengi PROPERTIES OUTPUT_NAME simplengi)
 target_link_libraries(simplengi sfml-graphics sfml-audio box2d)
 

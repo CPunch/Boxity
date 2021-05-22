@@ -19,5 +19,5 @@ public:
     void setSize(Vec2);
     Vec2 getSize();
 
-    void render(sf::RenderWindow &win);
+    void render(sf::RenderWindow*);
 };

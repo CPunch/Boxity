@@ -3,6 +3,7 @@
 #include "core/Entity.hpp"
 
 #include "services/PhysicsService.hpp"
+#include "services/RenderService.hpp"
 
 Root::Root(): Object() {
     // set our object feature flags
@@ -42,7 +43,9 @@ Service* Root::getService(SRVICETYPE srvc) {
     // service isn't loaded, load it
     switch(srvc) {
         case RENDERSRV: // stubbed
-            return nullptr;
+            loadedServices[srvc] = std::make_shared<RenderService>();
+            loadedServices[srvc]->setParent(shared_from_this());
+            return loadedServices[srvc].get();
         case PHYSICSRV:
             loadedServices[srvc] = std::make_shared<PhysicsService>();
             loadedServices[srvc]->setParent(shared_from_this());

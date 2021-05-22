@@ -1,9 +1,8 @@
 #include "core/Root.hpp"
 #include "core/Entity.hpp"
 
-Entity::Entity(): Object() {
+Entity::Entity(): VObject() {
     // set our object feature flags
-    addFlag(typeFlags, RENDEROBJ);
     addFlag(typeFlags, PHYSICOBJ);
 }
 
@@ -24,21 +23,22 @@ _rmvBody:
     body = nullptr;
 
     // pass the event down
-    Object::onParentRemove();
+    VObject::onParentRemove();
 }
 
 void Entity::onParentAdd() {
     // sanity check
     if (root == nullptr)
-        goto _passOPAEvnt;
+        goto _passEOPAEvnt;
+
 
     // grab the physics service & then create our new body
     pSrvc = (PhysicsService*)root->getService(PHYSICSRV);
     update();
 
-_passOPAEvnt:
+_passEOPAEvnt:
     // pass the event down
-    Object::onParentAdd();
+    VObject::onParentAdd();
 }
 
 // ==================================== [[ SETTERS ]] ====================================

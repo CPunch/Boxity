@@ -44,6 +44,6 @@ void Box::update() {
     prerender();
 }
 
-void Box::render(sf::RenderWindow &win) {
-    win.draw(shape);
+void Box::render(sf::RenderWindow *win) {
+    win->draw(shape);
 }

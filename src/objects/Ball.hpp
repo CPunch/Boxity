@@ -21,5 +21,5 @@ public:
 
     float getRadius();
 
-    void render(sf::RenderWindow &win);
+    void render(sf::RenderWindow*);
 };

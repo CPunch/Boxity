@@ -26,8 +26,8 @@ float Ball::getRadius() {
 
 // ==================================== [[ MISC. ]] ====================================
 
-void Ball::render(sf::RenderWindow &win) {
-    win.draw(shape);
+void Ball::render(sf::RenderWindow *win) {
+    win->draw(shape);
 }
 
 void Ball::prerender() {

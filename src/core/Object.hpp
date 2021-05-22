@@ -46,5 +46,4 @@ public:
 
     void remove();
     virtual void tick(float);
-    virtual void render(sf::RenderWindow&);
 };

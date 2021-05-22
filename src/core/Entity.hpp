@@ -3,13 +3,14 @@
 #include <SFML/Graphics.hpp>
 #include <box2d/box2d.h>
 
-#include "core/Object.hpp"
+#include "core/VObject.hpp"
 #include "core/Root.hpp"
 #include "services/PhysicsService.hpp"
+#include "services/RenderService.hpp"
 
 typedef sf::Vector2f Vec2;
 
-class Entity: public Object {
+class Entity: public VObject {
 protected:
     PhysicsService *pSrvc = nullptr;
     b2Body *body = nullptr;
