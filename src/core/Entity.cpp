@@ -118,7 +118,7 @@ void Entity::updateFixture(b2FixtureDef* fixDef) {
     body->CreateFixture(fixDef);
 }
 
-void Entity::tick(float) {
+void Entity::tick(uint64_t t) {
     // sanity check
     if (body == nullptr)
         return;
@@ -127,4 +127,6 @@ void Entity::tick(float) {
     angle = SFMLANGLE(body->GetAngle());
     position = Vec2(BOX2D2SFML(body->GetPosition().x), BOX2D2SFML(body->GetPosition().y));
     prerender();
+
+    Object::tick(t);
 }

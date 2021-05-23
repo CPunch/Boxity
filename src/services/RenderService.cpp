@@ -4,10 +4,10 @@
 
 #include <iostream>
 
-RenderService::RenderService() {
+RenderService::RenderService(ObjectPtr r): Service(r) {
     srvType = RENDERSRV;
     window = new sf::RenderWindow(sf::VideoMode(400, 500), "SimpleNgi");
-    window->setFramerateLimit(60);
+    //window->setFramerateLimit(60);
 
     std::cout << "RenderService loaded!" << std::endl;
 }

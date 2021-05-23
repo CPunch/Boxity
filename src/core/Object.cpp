@@ -82,7 +82,7 @@ void Object::removeChild(ObjectPtr c) {
     children.erase(c);
 }
 
-void Object::tick(float dt) {
+void Object::tick(uint64_t dt) {
     for (ObjectPtr child : children) {
         child->tick(dt);
     }

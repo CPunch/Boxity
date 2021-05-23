@@ -40,5 +40,5 @@ public:
     bool getAnchored();
     b2Body* getBody();
 
-    void tick(float);
+    void tick(uint64_t);
 };

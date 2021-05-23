@@ -8,6 +8,8 @@
 
 int main() {
     std::shared_ptr<Root> root = std::make_shared<Root>();
+    root->init();
+
     RenderService *rSrvc = (RenderService*)root->getService(RENDERSRV);
 
     std::shared_ptr<Box> ground = std::make_shared<Box>(Vec2(400, 50), Vec2(200, 400));

@@ -5,15 +5,19 @@
 enum SRVICETYPE {
     RENDERSRV,
     PHYSICSRV,
+    TASKSRV,
     MAXSRV
 };
 
-class Service : public Object {
+class Root;
+class Service {
 protected:
     SRVICETYPE srvType;
+    ObjectPtr root;
 
 public:
-    Service();
+    Service(ObjectPtr root);
 
     SRVICETYPE getServiceType();
+    virtual void tick();
 };

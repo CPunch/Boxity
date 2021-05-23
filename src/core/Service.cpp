@@ -1,6 +1,6 @@
 #include "core/Service.hpp"
 
-Service::Service(): Object() {
+Service::Service(ObjectPtr r): root(r) {
     
 }
 
@@ -9,3 +9,5 @@ Service::Service(): Object() {
 SRVICETYPE Service::getServiceType() {
     return srvType;
 }
+
+void Service::tick() {}

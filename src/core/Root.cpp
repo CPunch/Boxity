@@ -4,30 +4,52 @@
 
 #include "services/PhysicsService.hpp"
 #include "services/RenderService.hpp"
+#include "services/TaskService.hpp"
 
 Root::Root(): Object() {
     // set our object feature flags
     addFlag(typeFlags, RENDEROBJ);
     addFlag(typeFlags, ENTITYOBJ);
 
-    timer.restart();
-
     // initalize the loaded services table
     for (int i = 0; i < MAXSRV; i++)
         loadedServices[i] = nullptr;
 }
 
-void Root::tick() {
-    // we rate limit tick to 60 times a second (or whatever ratio ROOTTICKTMER is)
-    sf::Time deltaTime = timer.getElapsedTime();
-    if (deltaTime.asSeconds() > ROOTTICKTMER) {
-        // tick all objects
-        for (ObjectPtr child : Object::children) {
-            child->tick(deltaTime.asSeconds());
-        }
+Root::~Root() {
+    // free all of our loaded services
+    for (int i = 0; i < MAXSRV; i++) {
+        if (loadedServices[i] == nullptr)
+            continue;
 
-        timer.restart();
+        delete loadedServices[i];
     }
+}
+
+void Root::tick_task(void* ud, uint64_t currTime, uint64_t realDelta) {
+    Root *root = (Root*)ud;
+    PhysicsService *pSrvc = (PhysicsService*)root->loadedServices[PHYSICSRV];
+
+    // if we have a physics service loaded, we need to simulate the physics before calling tick()
+    if (pSrvc != nullptr)
+        pSrvc->pTick(realDelta);
+
+    // tick our children
+    for (ObjectPtr child : root->children) {
+        child->tick(currTime);
+    }
+}
+
+void Root::tick() {
+    // tick all our services
+    for (int i = 0; i < MAXSRV; i++)
+        if (loadedServices[i] != nullptr)
+            loadedServices[i]->tick();
+}
+
+void Root::init() {
+    // schedule our tick timer
+    ((TaskService*)getService(TASKSRV))->pushTask(Root::tick_task, (void*)this, ROOTTICKTMER, true);
 }
 
 // ==================================== [[ GETTERS ]] ====================================
@@ -38,19 +60,24 @@ ObjectPtr Root::getRoot() {
 
 Service* Root::getService(SRVICETYPE srvc) {
     if (loadedServices[srvc] != nullptr)
-        return loadedServices[srvc].get();
+        return loadedServices[srvc];
 
     // service isn't loaded, load it
+    Service *newSrvc;
     switch(srvc) {
         case RENDERSRV: // stubbed
-            loadedServices[srvc] = std::make_shared<RenderService>();
-            loadedServices[srvc]->setParent(shared_from_this());
-            return loadedServices[srvc].get();
+            newSrvc = new RenderService(shared_from_this());
+            break;
         case PHYSICSRV:
-            loadedServices[srvc] = std::make_shared<PhysicsService>();
-            loadedServices[srvc]->setParent(shared_from_this());
-            return loadedServices[srvc].get();
+            newSrvc = new PhysicsService(shared_from_this());
+            break;
+        case TASKSRV:
+            newSrvc = new TaskService(shared_from_this());
+            break;
         default:
             return nullptr;
     }
+
+    loadedServices[srvc] = newSrvc;
+    return newSrvc;
 }

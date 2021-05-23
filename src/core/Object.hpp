@@ -47,5 +47,5 @@ public:
     virtual ObjectPtr getRoot();
 
     void remove();
-    virtual void tick(float);
+    virtual void tick(uint64_t);
 };

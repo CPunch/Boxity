@@ -8,12 +8,13 @@ class PhysicsService : public Service {
 private:
     b2World *pWorld;
     b2Vec2 gravity;
+    uint64_t lastTick = 0;
 
 public:
-    PhysicsService();
+    PhysicsService(ObjectPtr r);
     ~PhysicsService();
 
-    void tick(float);
+    void pTick(uint64_t delta);
 
     b2World* getWorld();
 };

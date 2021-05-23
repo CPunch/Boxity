@@ -1,12 +1,9 @@
 #pragma once
 
-#include <SFML/Graphics.hpp>
-#include <box2d/box2d.h>
-
 #include "core/Object.hpp"
 #include "core/Service.hpp"
 
-#define ROOTTICKTMER 1/60.0f
+#define ROOTTICKTMER 1000/60
 #define SCALE 30.0f
 #define SFML2BOX2D(x) (x)/SCALE
 #define BOX2D2SFML(x) (x)*SCALE
@@ -14,13 +11,16 @@
 #define SFMLANGLE(x)  180/b2_pi*(x)
 
 class Root : public Object {
-    std::shared_ptr<Service> loadedServices[MAXSRV];
-    sf::Clock timer;
+    Service* loadedServices[MAXSRV];
+
+    static void tick_task(void*, uint64_t, uint64_t);
 
 public:
     Root();
+    ~Root();
 
     void tick();
+    void init(); // because shared_from_this hates constructors
 
     ObjectPtr getRoot();
     Service* getService(SRVICETYPE);

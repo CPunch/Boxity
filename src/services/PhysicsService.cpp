@@ -1,8 +1,11 @@
+#include "core/Root.hpp"
 #include "services/PhysicsService.hpp"
+#include "services/TaskService.hpp"
 
 #include <iostream>
 
-PhysicsService::PhysicsService(): Service() {
+PhysicsService::PhysicsService(ObjectPtr r): Service(r) {
+    Root *root = castObjPtr(r, Root);
     srvType = PHYSICSRV;
 
     // create box2d world
@@ -16,8 +19,8 @@ PhysicsService::~PhysicsService() {
     delete pWorld;
 }
 
-void PhysicsService::tick(float dt) {
-    pWorld->Step(dt, 6, 2);
+void PhysicsService::pTick(uint64_t delta) {
+    pWorld->Step(delta/1000.0f, 6, 2);
 }
 
 // ==================================== [[ GETTERS ]] ====================================
