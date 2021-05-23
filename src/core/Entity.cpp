@@ -3,7 +3,7 @@
 
 Entity::Entity(): VObject() {
     // set our object feature flags
-    addFlag(typeFlags, PHYSICOBJ);
+    addFlag(typeFlags, ENTITYOBJ);
 }
 
 void Entity::onParentRemove() {

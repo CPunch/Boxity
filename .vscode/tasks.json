@@ -26,6 +26,19 @@
                 "reveal": "always"
             },
             "group": "build"
+        },
+        {
+            "label": "release build",
+            "command": "cd ${workspaceRoot} && rm -rf build && mkdir build && cd build && cmake ../ .B && make -j",
+            "type": "shell",
+            "args": [],
+            "problemMatcher": [
+                "$tsc"
+            ],
+            "presentation": {
+                "reveal": "always"
+            },
+            "group": "build"
         }
     ]
 }

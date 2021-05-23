@@ -8,7 +8,7 @@
 Root::Root(): Object() {
     // set our object feature flags
     addFlag(typeFlags, RENDEROBJ);
-    addFlag(typeFlags, PHYSICOBJ);
+    addFlag(typeFlags, ENTITYOBJ);
 
     timer.restart();
 

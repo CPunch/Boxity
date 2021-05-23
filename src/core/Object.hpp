@@ -8,7 +8,7 @@
 
 enum OBJTYPE {
     RENDEROBJ  = 1,
-    PHYSICOBJ  = 2,
+    ENTITYOBJ  = 2,
     SERVICEOBJ = 4
 };
 
@@ -17,7 +17,7 @@ typedef std::shared_ptr<Object> ObjectPtr;
 typedef uint8_t iOBJTYPE;
 
 #define isRenderable(x) (x->getTypeFlags() & RENDEROBJ)
-#define isPhysical(x)   (x->getTypeFlags() & PHYSICOBJ)
+#define isPhysical(x)   (x->getTypeFlags() & ENTITYOBJ)
 #define addFlag(x,flag) x |= flag
 #define castObjPtr(x, type) ((type*)(x).get())
 
