@@ -2,6 +2,8 @@
 #include "core/Entity.hpp"
 
 Entity::Entity(): VObject() {
+    name = "Entity";
+
     // set our object feature flags
     addFlag(typeFlags, ENTITYOBJ);
 }

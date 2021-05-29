@@ -1,6 +1,8 @@
 #include "objects/Ball.hpp"
 
 Ball::Ball(): Entity() {
+    name = "Ball";
+
     shape.setFillColor(sf::Color::Black);
     setRadius(10.0f);
 }

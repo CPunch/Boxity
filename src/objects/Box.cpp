@@ -1,6 +1,8 @@
 #include "objects/Box.hpp"
 
 Box::Box(): Entity() {
+    name = "Box";
+
     shape.setFillColor(sf::Color::Black);
 }
 

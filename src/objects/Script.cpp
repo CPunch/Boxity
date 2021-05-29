@@ -2,6 +2,8 @@
 #include "objects/Script.hpp"
 
 Script::Script() {
+    name = "Script";
+
     state = luaL_newstate();
     luaopen_base(state);
     Object::addBindings(state);

@@ -1,7 +1,7 @@
 #include "core/Service.hpp"
 
 Service::Service(ObjectPtr r): root(r) {
-    
+
 }
 
 // ==================================== [[ GETTERS ]] ====================================
