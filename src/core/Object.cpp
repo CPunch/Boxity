@@ -317,6 +317,8 @@ void Object::registerClass(lua_State* L, registerLuaTable setterTbl, registerLua
     lua_pushstring(L, "__gc");
     lua_pushcfunction(L, objGC);
     lua_rawset(L, -3); // meta.__gc = objGC
+
+    lua_pop(L, 1);
 }
 
 void Object::registerLuaMethods(lua_State *L) {
