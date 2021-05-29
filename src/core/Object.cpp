@@ -162,8 +162,33 @@ static int objIndex(lua_State *L) {
         }
     }
 
-    std::cout << "indexed with \'" << indx << "\'" << std::endl;
-    return 0;
+    return luaL_error(L, "attempt to index nil value '%s'", indx);
+}
+
+static int objNewIndex(lua_State *L) {
+    ObjectPtr *oPtr = Object::grabObj(L, 1);
+    // sanity check
+    if (oPtr == nullptr)
+        return 0;
+
+    const char *indx = luaL_checkstring(L, 2);
+    // check if the index is in the getters table
+    lua_getmetatable(L, 1);
+    lua_getfield(L, -1, "__setters");
+    lua_getfield(L, -1, indx);
+    if (!lua_isnil(L, -1)) {
+        // we got our setter function, call it
+        lua_remove(L, -2); // removes __setters
+        lua_remove(L, -2); // removes meta
+
+        // push Obj, new value & call getter
+        lua_pushvalue(L, 1);
+        lua_pushvalue(L, 3);
+        lua_call(L, 2, 0);
+        return 0;
+    }
+
+    return luaL_error(L, "attempt to index nil value '%s'", indx);
 }
 
 // when lua decides to clean up it's reference, this'll be called
@@ -226,8 +251,21 @@ static int objSetParent(lua_State *L) {
     return 0;
 }
 
+static int objSetName(lua_State *L) {
+    ObjectPtr *oPtr = Object::grabObj(L, 1);
+    // sanity check
+    if (oPtr == nullptr)
+        return 0;
+
+    const char *newName = luaL_checkstring(L, 2);
+
+    (*oPtr)->setName(std::string(newName));
+    return 0;
+}
+
 static const luaL_Reg ObjSetters[] {
     {"parent", objSetParent},
+    {"name", objSetName},
     {NULL, NULL}
 };
 
@@ -271,6 +309,9 @@ void Object::registerClass(lua_State* L, const luaL_Reg *setters, const luaL_Reg
     lua_rawset(L, -3); // meta.__index = objIndex
 
     // set __newindex
+    lua_pushstring(L, "__newindex");
+    lua_pushcfunction(L, objNewIndex);
+    lua_rawset(L, -3); // meta.__newindex = objNewIndex
 
     // set __gc
     lua_pushstring(L, "__gc");
