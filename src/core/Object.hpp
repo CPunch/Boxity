@@ -58,4 +58,5 @@ public:
     static void addBindings(lua_State*);
     static void pushObj(lua_State *L, ObjectPtr obj);
     static ObjectPtr* grabObj(lua_State* L, int indx);
+    static void registerClass(lua_State* L, const luaL_Reg *setters, const luaL_Reg *getters, const luaL_Reg *methods, const char *name);
 };

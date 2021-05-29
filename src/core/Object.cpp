@@ -128,11 +128,41 @@ ObjectPtr* Object::grabObj(lua_State* L, int indx) {
     return oPtr == NULL ? nullptr : (ObjectPtr*)oPtr;
 }
 
-// if all the other meta __index tables failed, this is finally called.
 static int objIndex(lua_State *L) {
-    const char *indx = luaL_checklstring(L, 1, NULL);
+    ObjectPtr *oPtr = Object::grabObj(L, 1);
+    // sanity check
+    if (oPtr == nullptr)
+        return 0;
 
-    std::cout << "indexed with \'" << indx << "\'" << std::endl; 
+    const char *indx = luaL_checkstring(L, 2);
+
+    // check if the index is in the getters table
+    lua_getmetatable(L, 1);
+    lua_getfield(L, -1, "__getters");
+    lua_getfield(L, -1, indx);
+    if (!lua_isnil(L, -1)) {
+        // we got our getter function, call it
+        lua_remove(L, -2); // removes __getters
+        lua_remove(L, -2); // removes meta
+
+        // push Obj & call getter
+        lua_pushvalue(L, 1);
+        lua_call(L, 1, 1);
+        return 1;
+    } else {
+        lua_pop(L, 2); // pops result && __getters
+
+        lua_getfield(L, -1, "__methods");
+        lua_getfield(L, -1, indx);
+        if (!lua_isnil(L, -1)) {
+            lua_remove(L, -2); // removes __methods
+            lua_remove(L, -2); // removes meta
+
+            return 1; // returns the method
+        }
+    }
+
+    std::cout << "indexed with \'" << indx << "\'" << std::endl;
     return 0;
 }
 
@@ -173,8 +203,7 @@ static int objGetName(lua_State *L) {
     return 0;
 }
 
-static const luaL_Reg ObjIndex[] {
-    {"__index", objIndex},
+static const luaL_Reg ObjGetters[] {
     {"parent", objGetParent},
     {"name", objGetName},
     {NULL, NULL}
@@ -197,8 +226,12 @@ static int objSetParent(lua_State *L) {
     return 0;
 }
 
-static const luaL_Reg ObjNewIndex[] {
+static const luaL_Reg ObjSetters[] {
     {"parent", objSetParent},
+    {NULL, NULL}
+};
+
+static const luaL_Reg ObjMethods[] {
     {NULL, NULL}
 };
 
@@ -206,26 +239,45 @@ static const luaL_Reg ObjLib[] {
     {NULL, NULL}
 };
 
-void Object::addBindings(lua_State *L) {
-    // create the "Object" library table and push it onto the stack
-    luaL_newlib(L, ObjLib);
+void Object::registerClass(lua_State* L, const luaL_Reg *setters, const luaL_Reg *getters, const luaL_Reg *methods, const char *name) {
+    luaL_newmetatable(L, name);
 
-    // create the Object metatable
-    luaL_newmetatable(L, OBJLIBNAME);
-    // set '__index'
-    lua_pushvalue(L, -1);
-    luaL_newlib(L, ObjIndex);
-    lua_setfield(L, -2, "__index");
-    // set '__newindex'
-    lua_pushvalue(L, -1);
-    luaL_newlib(L, ObjNewIndex);
-    lua_setfield(L, -2, "__newindex");
-    // set '__gc'
-    lua_pushvalue(L, -1);
+    // don't let the user set the metatable for these
+    lua_pushstring(L, "__metatable");
+    lua_pushstring(L, "This metatable is locked");
+    lua_rawset(L, -3); // meta.__metatable = "This metatable is locked"
+
+    // set setters
+    lua_pushstring(L, "__setters");
+    lua_newtable(L);
+    luaL_setfuncs(L, setters, 0);
+    lua_rawset(L, -3); // meta.__setters = setters
+
+    // set getters
+    lua_pushstring(L, "__getters");
+    lua_newtable(L);
+    luaL_setfuncs(L, getters, 0);
+    lua_rawset(L, -3); // meta.__getters = getters
+
+    // set methods
+    lua_pushstring(L, "__methods");
+    lua_newtable(L);
+    luaL_setfuncs(L, methods, 0);
+    lua_rawset(L, -3); // meta.__methods = methods
+
+    // set __index
+    lua_pushstring(L, "__index");
+    lua_pushcfunction(L, objIndex);
+    lua_rawset(L, -3); // meta.__index = objIndex
+
+    // set __newindex
+
+    // set __gc
+    lua_pushstring(L, "__gc");
     lua_pushcfunction(L, objGC);
-    lua_setfield(L, -2, "__gc");
-    lua_pop(L, 1); // pop the ObjMeta table from the stack
+    lua_rawset(L, -3); // meta.__gc = objGC
+}
 
-    // set the Object global
-    lua_setglobal(L, OBJLIBNAME);
+void Object::addBindings(lua_State *L) {
+    Object::registerClass(L, ObjSetters, ObjGetters, ObjMethods, "Object");
 }
