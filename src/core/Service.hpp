@@ -6,6 +6,7 @@ enum SRVICETYPE {
     RENDERSRV,
     PHYSICSRV,
     TASKSRV,
+    SCRIPTSRV,
     MAXSRV
 };
 

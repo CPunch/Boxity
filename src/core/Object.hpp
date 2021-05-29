@@ -2,6 +2,8 @@
 
 #include <SFML/Graphics.hpp>
 #include <box2d/box2d.h>
+#include "lua.hpp"
+#include <string>
 #include <unordered_set>
 #include <inttypes.h>
 #include <memory>
@@ -25,6 +27,7 @@ class Root;
 class Object : public std::enable_shared_from_this<Object> {
 protected:
     std::unordered_set<ObjectPtr> children;
+    std::string name;
     ObjectPtr parent = nullptr;
     ObjectPtr root = nullptr;
     iOBJTYPE typeFlags = 0;
@@ -40,12 +43,19 @@ public:
     Object();
     ~Object();
 
+    void setName(std::string);
     void setParent(ObjectPtr);
 
-    Object* getParent();
+    std::string getName();
+    ObjectPtr getParent();
     iOBJTYPE getTypeFlags();
     virtual ObjectPtr getRoot();
 
     void remove();
     virtual void tick(uint64_t);
+
+    // lua stuff
+    static void addBindings(lua_State*);
+    static void pushObj(lua_State *L, ObjectPtr obj);
+    static ObjectPtr* grabObj(lua_State* L, int indx);
 };

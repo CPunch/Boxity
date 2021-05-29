@@ -3,6 +3,7 @@
 #include "services/RenderService.hpp"
 #include "objects/Box.hpp"
 #include "objects/Ball.hpp"
+#include "objects/Script.hpp"
 
 #include <iostream>
 
@@ -19,6 +20,10 @@ int main() {
     std::shared_ptr<Ball> b = std::make_shared<Ball>(10.0f, Vec2(200, 100));
     b->setAnchored(false);
     b->setParent(root);
+
+    std::shared_ptr<Script> scrpt = std::make_shared<Script>();
+    scrpt->setParent(root);
+    scrpt->run("print(root.name)");
 
     while (rSrvc->isOpen()) {
         rSrvc->pollEvents();

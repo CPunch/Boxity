@@ -7,6 +7,8 @@
 #include "services/TaskService.hpp"
 
 Root::Root(): Object() {
+    name = "Root";
+
     // set our object feature flags
     addFlag(typeFlags, RENDEROBJ);
     addFlag(typeFlags, ENTITYOBJ);

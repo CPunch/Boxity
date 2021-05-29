@@ -1,3 +1,6 @@
 [submodule "cmake-modules/sanitizers-cmake"]
 	path = cmake-modules/sanitizers-cmake
-	url = git://github.com/arsenm/sanitizers-cmake.git
+	url = https://github.com/arsenm/sanitizers-cmake.git
+[submodule "cmake-modules/Lua"]
+	path = cmake-modules/Lua
+	url = https://github.com/walterschell/Lua.git
