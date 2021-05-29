@@ -228,11 +228,15 @@ static int objGetName(lua_State *L) {
     return 0;
 }
 
-static const luaL_Reg ObjGetters[] {
-    {"parent", objGetParent},
-    {"name", objGetName},
-    {NULL, NULL}
-};
+void Object::registerLuaGetters(lua_State *L) {
+    static const luaL_Reg getters[] {
+        {"parent", objGetParent},
+        {"name", objGetName},
+        {NULL, NULL}
+    };
+
+    luaL_setfuncs(L, getters, 0);
+}
 
 // ==================================== [[ LUA SETTERS ]] ====================================
 
@@ -263,21 +267,17 @@ static int objSetName(lua_State *L) {
     return 0;
 }
 
-static const luaL_Reg ObjSetters[] {
-    {"parent", objSetParent},
-    {"name", objSetName},
-    {NULL, NULL}
-};
+void Object::registerLuaSetters(lua_State *L) {
+    static const luaL_Reg setters[] {
+        {"parent", objSetParent},
+        {"name", objSetName},
+        {NULL, NULL}
+    };
 
-static const luaL_Reg ObjMethods[] {
-    {NULL, NULL}
-};
+    luaL_setfuncs(L, setters, 0);
+}
 
-static const luaL_Reg ObjLib[] {
-    {NULL, NULL}
-};
-
-void Object::registerClass(lua_State* L, const luaL_Reg *setters, const luaL_Reg *getters, const luaL_Reg *methods, const char *name) {
+void Object::registerClass(lua_State* L, registerLuaTable setterTbl, registerLuaTable getterTbl, registerLuaTable methodTbl, const char *name) {
     luaL_newmetatable(L, name);
 
     // don't let the user set the metatable for these
@@ -288,19 +288,19 @@ void Object::registerClass(lua_State* L, const luaL_Reg *setters, const luaL_Reg
     // set setters
     lua_pushstring(L, "__setters");
     lua_newtable(L);
-    luaL_setfuncs(L, setters, 0);
+    setterTbl(L);
     lua_rawset(L, -3); // meta.__setters = setters
 
     // set getters
     lua_pushstring(L, "__getters");
     lua_newtable(L);
-    luaL_setfuncs(L, getters, 0);
+    getterTbl(L);
     lua_rawset(L, -3); // meta.__getters = getters
 
     // set methods
     lua_pushstring(L, "__methods");
     lua_newtable(L);
-    luaL_setfuncs(L, methods, 0);
+    methodTbl(L);
     lua_rawset(L, -3); // meta.__methods = methods
 
     // set __index
@@ -319,6 +319,14 @@ void Object::registerClass(lua_State* L, const luaL_Reg *setters, const luaL_Reg
     lua_rawset(L, -3); // meta.__gc = objGC
 }
 
+void Object::registerLuaMethods(lua_State *L) {
+    static const luaL_Reg methods[] {
+        {NULL, NULL}
+    };
+
+    luaL_setfuncs(L, methods, 0);
+}
+
 void Object::addBindings(lua_State *L) {
-    Object::registerClass(L, ObjSetters, ObjGetters, ObjMethods, "Object");
+    Object::registerClass(L, registerLuaSetters, registerLuaGetters, registerLuaMethods, "Object");
 }

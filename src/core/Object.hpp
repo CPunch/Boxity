@@ -17,6 +17,7 @@ enum OBJTYPE {
 class Object;
 typedef std::shared_ptr<Object> ObjectPtr;
 typedef uint8_t iOBJTYPE;
+typedef void (*registerLuaTable)(lua_State*);
 
 #define isRenderable(x) (x->getTypeFlags() & RENDEROBJ)
 #define isPhysical(x)   (x->getTypeFlags() & ENTITYOBJ)
@@ -58,5 +59,9 @@ public:
     static void addBindings(lua_State*);
     static void pushObj(lua_State *L, ObjectPtr obj);
     static ObjectPtr* grabObj(lua_State* L, int indx);
-    static void registerClass(lua_State* L, const luaL_Reg *setters, const luaL_Reg *getters, const luaL_Reg *methods, const char *name);
+
+    static void registerLuaGetters(lua_State*);
+    static void registerLuaSetters(lua_State*);
+    static void registerLuaMethods(lua_State*);
+    static void registerClass(lua_State* L, registerLuaTable settertbl, registerLuaTable gettertbl, registerLuaTable methodtbl, const char *name);
 };
