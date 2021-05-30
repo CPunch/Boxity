@@ -5,3 +5,5 @@ extern "C" {
 #include "lauxlib.h"
 #include "lualib.h"
 }
+
+typedef void (*registerLuaTable)(lua_State*);

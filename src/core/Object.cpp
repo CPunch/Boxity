@@ -104,32 +104,43 @@ void Object::tick(uint64_t dt) {
 
 // ==================================== [[ LUA ]] ====================================
 
-void Object::pushObj(lua_State *L, ObjectPtr obj) {
-    // sanity check
-    if (obj.get() == nullptr) {
-        lua_pushnil(L);
-        return;
-    }
-
+void Object::pushLua(lua_State *L) {
     // create a shared_ptr userdata on the lua heap
     void *oPtr = lua_newuserdata(L, sizeof(ObjectPtr));
 
+    // handle error
+    if (oPtr == NULL)
+        return;
+
     // use the new operator to increase our reference count of this shared_ptr
-    new(oPtr) ObjectPtr(obj);
+    new(oPtr) ObjectPtr(shared_from_this());
 
     // set the udata's metatable
     luaL_getmetatable(L, OBJLIBNAME);
     lua_setmetatable(L, -2);
 }
 
-ObjectPtr* Object::grabObj(lua_State* L, int indx) {
+ObjectPtr* Object::grabLua(lua_State *L, int indx, const char *classname) {
     void *oPtr = luaL_checkudata(L, indx, OBJLIBNAME);
+    if (oPtr == NULL)
+        return nullptr;
 
-    return oPtr == NULL ? nullptr : (ObjectPtr*)oPtr;
+    // check if the classname is in the __childof table
+    lua_getmetatable(L, 1);
+    lua_getfield(L, -1, "__childof");
+    lua_getfield(L, -1, classname);
+    if (lua_isnil(L, -1)) { // the classname wasn't in __childof!
+        lua_pop(L, 3); // pop nil, __childof & metatable
+
+        return nullptr;
+    }
+
+    lua_pop(L, 3);
+    return (ObjectPtr*)oPtr;
 }
 
 static int objIndex(lua_State *L) {
-    ObjectPtr *oPtr = Object::grabObj(L, 1);
+    ObjectPtr *oPtr = Object::grabLua(L, 1, "Object");
     // sanity check
     if (oPtr == nullptr)
         return 0;
@@ -166,7 +177,7 @@ static int objIndex(lua_State *L) {
 }
 
 static int objNewIndex(lua_State *L) {
-    ObjectPtr *oPtr = Object::grabObj(L, 1);
+    ObjectPtr *oPtr = Object::grabLua(L, 1, "Object");
     // sanity check
     if (oPtr == nullptr)
         return 0;
@@ -193,7 +204,7 @@ static int objNewIndex(lua_State *L) {
 
 // when lua decides to clean up it's reference, this'll be called
 static int objGC(lua_State *L) {
-    ObjectPtr *oPtr = Object::grabObj(L, 1);
+    ObjectPtr *oPtr = Object::grabLua(L, 1, "Object");
 
     // reset the shared_ptr, removing this reference
     if (oPtr != nullptr)
@@ -205,11 +216,11 @@ static int objGC(lua_State *L) {
 // ==================================== [[ LUA GETTERS ]] ====================================
 
 static int objGetParent(lua_State *L) {
-    ObjectPtr *oPtr = Object::grabObj(L, 1);
+    ObjectPtr *oPtr = Object::grabLua(L, 1, "Object");
 
     // sanity check
-    if (oPtr != nullptr) {
-        Object::pushObj(L, (*oPtr)->getParent());
+    if (oPtr != nullptr && (*oPtr)->getParent() != nullptr) {
+        (*oPtr)->getParent()->pushLua(L);
         return 1;
     }
 
@@ -217,7 +228,7 @@ static int objGetParent(lua_State *L) {
 }
 
 static int objGetName(lua_State *L) {
-    ObjectPtr *oPtr = Object::grabObj(L, 1);
+    ObjectPtr *oPtr = Object::grabLua(L, 1, "Object");
 
     // sanity check
     if (oPtr != nullptr) {
@@ -241,8 +252,8 @@ void Object::registerLuaGetters(lua_State *L) {
 // ==================================== [[ LUA SETTERS ]] ====================================
 
 static int objSetParent(lua_State *L) {
-    ObjectPtr *oPtr = Object::grabObj(L, 1);
-    ObjectPtr *newParent = Object::grabObj(L, 1);
+    ObjectPtr *oPtr = Object::grabLua(L, 1, "Object");
+    ObjectPtr *newParent = Object::grabLua(L, 1, "Object");
 
     // sanity check
     if (oPtr != nullptr) {
@@ -256,7 +267,7 @@ static int objSetParent(lua_State *L) {
 }
 
 static int objSetName(lua_State *L) {
-    ObjectPtr *oPtr = Object::grabObj(L, 1);
+    ObjectPtr *oPtr = Object::grabLua(L, 1, "Object");
     // sanity check
     if (oPtr == nullptr)
         return 0;
@@ -277,7 +288,7 @@ void Object::registerLuaSetters(lua_State *L) {
     luaL_setfuncs(L, setters, 0);
 }
 
-void Object::registerClass(lua_State* L, registerLuaTable setterTbl, registerLuaTable getterTbl, registerLuaTable methodTbl, const char *name) {
+void Object::registerClass(lua_State* L, registerLuaTable setterTbl, registerLuaTable getterTbl, registerLuaTable methodTbl, registerLuaTable childTbl, const char *name) {
     luaL_newmetatable(L, name);
 
     // don't let the user set the metatable for these
@@ -296,6 +307,12 @@ void Object::registerClass(lua_State* L, registerLuaTable setterTbl, registerLua
     lua_newtable(L);
     getterTbl(L);
     lua_rawset(L, -3); // meta.__getters = getters
+
+    // set type info
+    lua_pushstring(L, "__childof");
+    lua_newtable(L);
+    childTbl(L);
+    lua_rawset(L, -3); // meta.__childof = childtypes
 
     // set methods
     lua_pushstring(L, "__methods");
@@ -329,6 +346,12 @@ void Object::registerLuaMethods(lua_State *L) {
     luaL_setfuncs(L, methods, 0);
 }
 
+void Object::registerLuaChild(lua_State *L) {
+    lua_pushstring(L, "Object");
+    lua_pushboolean(L, 1);
+    lua_rawset(L, -3); // adds "Object" to the child table
+}
+
 void Object::addBindings(lua_State *L) {
-    Object::registerClass(L, registerLuaSetters, registerLuaGetters, registerLuaMethods, "Object");
+    registerClass(L, registerLuaSetters, registerLuaGetters, registerLuaMethods, registerLuaChild, "Object");
 }

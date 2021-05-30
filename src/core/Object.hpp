@@ -10,14 +10,12 @@
 
 enum OBJTYPE {
     RENDEROBJ  = 1,
-    ENTITYOBJ  = 2,
-    SERVICEOBJ = 4
+    ENTITYOBJ  = 2
 };
 
 class Object;
 typedef std::shared_ptr<Object> ObjectPtr;
 typedef uint8_t iOBJTYPE;
-typedef void (*registerLuaTable)(lua_State*);
 
 #define isRenderable(x) (x->getTypeFlags() & RENDEROBJ)
 #define isPhysical(x)   (x->getTypeFlags() & ENTITYOBJ)
@@ -57,11 +55,12 @@ public:
 
     // lua stuff
     static void addBindings(lua_State*);
-    static void pushObj(lua_State *L, ObjectPtr obj);
-    static ObjectPtr* grabObj(lua_State* L, int indx);
+    virtual void pushLua(lua_State *L);
+    static ObjectPtr* grabLua(lua_State *L, int indx, const char *classname);
 
     static void registerLuaGetters(lua_State*);
     static void registerLuaSetters(lua_State*);
     static void registerLuaMethods(lua_State*);
-    static void registerClass(lua_State* L, registerLuaTable settertbl, registerLuaTable gettertbl, registerLuaTable methodtbl, const char *name);
+    static void registerLuaChild(lua_State*);
+    static void registerClass(lua_State* L, registerLuaTable settertbl, registerLuaTable gettertbl, registerLuaTable methodtbl, registerLuaTable childTbl, const char *name);
 };

@@ -12,7 +12,7 @@ Script::Script() {
 // temp
 void Script::run(std::string script) {
     // push root and set the global
-    Object::pushObj(state, root);
+    root->pushLua(state);
     lua_setglobal(state, "root");
 
     luaL_loadstring(state, script.c_str());
