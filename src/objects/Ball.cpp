@@ -8,7 +8,7 @@ Ball::Ball(): Entity() {
 }
 
 Ball::Ball(float radi, Vec2 pos): Ball() {
-    position = pos;
+    position->set(pos);
     setRadius(radi);
 }
 
@@ -34,7 +34,7 @@ void Ball::render(sf::RenderWindow *win) {
 
 void Ball::prerender() {
     shape.setRadius(radius);
-    shape.setPosition(position);
+    shape.setPosition(position->getSVec());
     shape.setRotation(angle);
 }
 

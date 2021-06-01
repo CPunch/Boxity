@@ -23,7 +23,7 @@ int main() {
 
     std::shared_ptr<Script> scrpt = std::make_shared<Script>();
     scrpt->setParent(root);
-    scrpt->run("print(root.name) root.name = \'Hello world!\' print(root.name)");
+    scrpt->run("print(Object)");
 
     while (rSrvc->isOpen()) {
         rSrvc->pollEvents();

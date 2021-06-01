@@ -46,7 +46,7 @@ _passEOPAEvnt:
 // ==================================== [[ SETTERS ]] ====================================
 
 void Entity::setPosition(Vec2 pos) {
-    position = pos;
+    position->set(pos);
     update();
 }
 
@@ -63,7 +63,7 @@ void Entity::setAnchored(bool a) {
 
 // ==================================== [[ GETTERS ]] ====================================
 
-Vec2 Entity::getPosition() {
+std::shared_ptr<Vec2> Entity::getPosition() {
     return position;
 }
 
@@ -101,7 +101,7 @@ bool Entity::createBody() {
     // create body defintion & set
     b2BodyDef myBodyDef;
     myBodyDef.type = anchored ? b2_staticBody : b2_dynamicBody;
-    myBodyDef.position.Set(SFML2BOX2D(position.x), SFML2BOX2D(position.y));
+    myBodyDef.position = position->getBVec();
     myBodyDef.angle = BOX2DANGLE(angle);
 
     body = wrld->CreateBody(&myBodyDef);
@@ -116,7 +116,7 @@ void Entity::updateFixture(b2FixtureDef* fixDef) {
     if (!createBody())
         return;
 
-    body->SetTransform(b2Vec2(SFML2BOX2D(position.x), SFML2BOX2D(position.y)), angle);
+    body->SetTransform(position->getBVec(), angle);
     body->CreateFixture(fixDef);
 }
 
@@ -125,9 +125,18 @@ void Entity::tick(uint64_t t) {
     if (body == nullptr)
         return;
 
-    // update pos & angle from box2d
     angle = SFMLANGLE(body->GetAngle());
-    position = Vec2(BOX2D2SFML(body->GetPosition().x), BOX2D2SFML(body->GetPosition().y));
+
+    if (!position->getUpdated()) {
+        // update pos from box2d
+        position->setBVec(body->GetPosition());
+    } else {
+        // update(), which calls updateFixture which updates the box2d position
+        update();
+    }
+
+    position->setUpdated(false);
+
     prerender();
 
     Object::tick(t);

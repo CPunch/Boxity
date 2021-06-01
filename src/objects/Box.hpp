@@ -3,11 +3,12 @@
 #include <SFML/Graphics.hpp>
 
 #include "core/Entity.hpp"
+#include "types/Vec2.hpp"
 
 class Box : public Entity {
 private:
     sf::RectangleShape shape;
-    Vec2 size = Vec2(10.0f, 10.0f);
+    std::shared_ptr<Vec2> size = std::make_shared<Vec2>(10.0f, 10.0f);
 
     void prerender();
     void update();
@@ -17,7 +18,7 @@ public:
     Box(Vec2 size, Vec2 pos);
 
     void setSize(Vec2);
-    Vec2 getSize();
+    std::shared_ptr<Vec2> getSize();
 
     void render(sf::RenderWindow*);
 };

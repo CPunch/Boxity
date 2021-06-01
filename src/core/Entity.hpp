@@ -7,14 +7,13 @@
 #include "core/Root.hpp"
 #include "services/PhysicsService.hpp"
 #include "services/RenderService.hpp"
-
-typedef sf::Vector2f Vec2;
+#include "types/Vec2.hpp"
 
 class Entity: public VObject {
 protected:
     PhysicsService *pSrvc = nullptr;
     b2Body *body = nullptr;
-    Vec2 position = Vec2(0, 0);
+    std::shared_ptr<Vec2> position = std::make_shared<Vec2>(0, 0);
     float angle = 0;
     bool anchored = false;
 
@@ -35,7 +34,7 @@ public:
     void setAngle(float);
     void setAnchored(bool);
 
-    Vec2 getPosition();
+    std::shared_ptr<Vec2> getPosition();
     float getAngle();
     bool getAnchored();
     b2Body* getBody();

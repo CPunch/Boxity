@@ -7,35 +7,35 @@ Box::Box(): Entity() {
 }
 
 Box::Box(Vec2 sz, Vec2 pos): Box() {
-    position = pos;
+    position->set(pos);
     setSize(sz);
 }
 
 // ==================================== [[ SETTERS ]] ====================================
 
 void Box::setSize(Vec2 sz) {
-    size = sz;
-    shape.setOrigin(sz.x/2, sz.y/2);
+    size->set(sz);
+    shape.setOrigin(sz.getX()/2, sz.getY()/2);
     update();
 }
 
 // ==================================== [[ GETTERS ]] ====================================
 
-Vec2 Box::getSize() {
+std::shared_ptr<Vec2> Box::getSize() {
     return size;
 }
 
 // ==================================== [[ MISC. ]] ====================================
 
 void Box::prerender() {
-    shape.setSize(size);
-    shape.setPosition(position);
+    shape.setSize(size->getSVec());
+    shape.setPosition(position->getSVec());
     shape.setRotation(angle);
 }
 
 void Box::update() {
     b2PolygonShape b2Shape;
-    b2Shape.SetAsBox(SFML2BOX2D(size.x/2), SFML2BOX2D(size.y/2));
+    b2Shape.SetAsBox(size->getBVec().x/2, size->getBVec().y/2);
 
     b2FixtureDef fixDef;
     fixDef.shape = &b2Shape;

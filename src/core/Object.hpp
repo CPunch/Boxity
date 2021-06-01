@@ -47,6 +47,8 @@ public:
 
     std::string getName();
     ObjectPtr getParent();
+    std::unordered_set<ObjectPtr> getChildren();
+    ObjectPtr findChild(std::string name);
     iOBJTYPE getTypeFlags();
     virtual ObjectPtr getRoot();
 
