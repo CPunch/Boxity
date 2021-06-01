@@ -21,4 +21,6 @@ public:
     std::shared_ptr<Vec2> getSize();
 
     void render(sf::RenderWindow*);
+
+    void tick(uint64_t);
 };

@@ -49,3 +49,12 @@ void Box::update() {
 void Box::render(sf::RenderWindow *win) {
     win->draw(shape);
 }
+
+void Box::tick(uint64_t t) {
+    if (size->getUpdated()) {
+        update();
+        size->setUpdated(false);
+    }
+
+    Entity::tick(t);
+}
