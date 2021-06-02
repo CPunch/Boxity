@@ -6,6 +6,7 @@
 
 Object::Object() {
     name = "Object";
+    className = LIBNAME;
 }
 
 Object::~Object() {}
@@ -61,6 +62,10 @@ std::string Object::getName() {
     return name;
 }
 
+std::string Object::getClassName() {
+    return className;
+}
+
 ObjectPtr Object::getParent() {
     return parent;
 }
@@ -75,7 +80,7 @@ std::unordered_set<ObjectPtr> Object::getChildren() {
 
 ObjectPtr Object::findChild(std::string _name) {
     for (ObjectPtr child : children) {
-        if (child->name.compare(name) == 0)
+        if (child->getName().compare(_name) == 0)
             return child;
     }
 
@@ -118,7 +123,7 @@ void Object::tick(uint64_t dt) {
 
 // ==================================== [[ LUA ]] ====================================
 
-void Object::pushLua(lua_State *L) {
+void Object::pushRawLua(lua_State *L, const char *libname) {
     // create a shared_ptr userdata on the lua heap
     void *oPtr = lua_newuserdata(L, sizeof(ObjectPtr));
 
@@ -130,12 +135,16 @@ void Object::pushLua(lua_State *L) {
     new(oPtr) ObjectPtr(shared_from_this());
 
     // set the udata's metatable
-    luaL_getmetatable(L, LIBNAME);
+    luaL_getmetatable(L, libname);
     lua_setmetatable(L, -2);
 }
 
+void Object::pushLua(lua_State *L) {
+    pushRawLua(L, LIBNAME);
+}
+
 ObjectPtr* Object::grabLua(lua_State *L, int indx, const char *classname) {
-    void *oPtr = luaL_checkudata(L, indx, LIBNAME);
+    void *oPtr = lua_touserdata(L, indx);
     if (oPtr == NULL)
         return nullptr;
 
@@ -184,6 +193,14 @@ static int objIndex(lua_State *L) {
             lua_remove(L, -2); // removes meta
 
             return 1; // returns the method
+        } else { // last resort, check for children of that name
+            lua_pop(L, 2);
+            ObjectPtr child = (*oPtr)->findChild(std::string(indx));
+
+            if (child.get() != nullptr) {
+                child->pushLua(L);
+                return 1;
+            }
         }
     }
 
@@ -229,7 +246,7 @@ static int objGC(lua_State *L) {
 
 // ==================================== [[ LUA GETTERS ]] ====================================
 
-static int objGetParent(lua_State *L) {
+static int luaGetParent(lua_State *L) {
     ObjectPtr *oPtr = Object::grabLua(L, 1, LIBNAME);
 
     // sanity check
@@ -241,7 +258,7 @@ static int objGetParent(lua_State *L) {
     return 0;
 }
 
-static int objGetName(lua_State *L) {
+static int luaGetName(lua_State *L) {
     ObjectPtr *oPtr = Object::grabLua(L, 1, LIBNAME);
 
     // sanity check
@@ -253,10 +270,23 @@ static int objGetName(lua_State *L) {
     return 0;
 }
 
+static int luaGetClassName(lua_State *L) {
+    ObjectPtr *oPtr = Object::grabLua(L, 1, LIBNAME);
+
+    // sanity check
+    if (oPtr != nullptr) {
+        lua_pushstring(L, (*oPtr)->getClassName().c_str());
+        return 1;
+    }
+
+    return 0;
+}
+
 void Object::registerLuaGetters(lua_State *L) {
     static const luaL_Reg getters[] {
-        {"parent", objGetParent},
-        {"name", objGetName},
+        {"parent", luaGetParent},
+        {"name", luaGetName},
+        {"className", luaGetClassName},
         {NULL, NULL}
     };
 
@@ -265,7 +295,7 @@ void Object::registerLuaGetters(lua_State *L) {
 
 // ==================================== [[ LUA SETTERS ]] ====================================
 
-static int objSetParent(lua_State *L) {
+static int luaSetParent(lua_State *L) {
     ObjectPtr *oPtr = Object::grabLua(L, 1, LIBNAME);
     ObjectPtr *newParent = Object::grabLua(L, 1, LIBNAME);
 
@@ -280,7 +310,7 @@ static int objSetParent(lua_State *L) {
     return 0;
 }
 
-static int objSetName(lua_State *L) {
+static int luaSetName(lua_State *L) {
     ObjectPtr *oPtr = Object::grabLua(L, 1, LIBNAME);
     // sanity check
     if (oPtr == nullptr)
@@ -292,10 +322,15 @@ static int objSetName(lua_State *L) {
     return 0;
 }
 
+static int luaSetClassName(lua_State *L) {
+    return luaL_error(L, "'className' is a locked property!");
+}
+
 void Object::registerLuaSetters(lua_State *L) {
     static const luaL_Reg setters[] {
-        {"parent", objSetParent},
-        {"name", objSetName},
+        {"parent", luaSetParent},
+        {"name", luaSetName},
+        {"className", luaSetClassName},
         {NULL, NULL}
     };
 

@@ -37,7 +37,7 @@ void Type::pushLua(lua_State *L) {
 }
 
 TypePtr* Type::grabLua(lua_State* L, int indx, const char *classname) {
-    void *tPtr = luaL_checkudata(L, indx, LIBNAME);
+    void *tPtr = lua_touserdata(L, indx);
     if (tPtr == NULL)
         return nullptr;
 

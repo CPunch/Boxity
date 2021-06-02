@@ -23,7 +23,7 @@ int main() {
 
     std::shared_ptr<Script> scrpt = std::make_shared<Script>();
     scrpt->setParent(root);
-    scrpt->run("print(Object)");
+    scrpt->run("print(root.Box.position.x)");
 
     while (rSrvc->isOpen()) {
         rSrvc->pollEvents();

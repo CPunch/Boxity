@@ -1,8 +1,11 @@
 #include "core/Root.hpp"
 #include "core/Entity.hpp"
 
+#define LIBNAME "Entity"
+
 Entity::Entity(): VObject() {
     name = "Entity";
+    className = LIBNAME;
 
     // set our object feature flags
     addFlag(typeFlags, ENTITYOBJ);
@@ -140,4 +143,100 @@ void Entity::tick(uint64_t t) {
     prerender();
 
     Object::tick(t);
+}
+
+// ==================================== [[ LUA ]] ====================================
+
+void Entity::pushLua(lua_State *L) {
+    pushRawLua(L, LIBNAME);
+}
+
+// ==================================== [[ LUA GETTERS ]] ====================================
+
+static int luaGetPosition(lua_State *L) {
+    ObjectPtr *oPtr = Object::grabLua(L, 1, LIBNAME);
+
+    if (oPtr == nullptr)
+        return 0;
+
+    // push position & return
+    castObjPtr(*oPtr, Entity)->getPosition()->pushLua(L);
+    return 1;
+}
+
+static int luaGetAngle(lua_State *L) {
+    ObjectPtr *oPtr = Object::grabLua(L, 1, LIBNAME);
+
+    if (oPtr == nullptr)
+        return 0;
+
+    // push angle & return
+    lua_pushnumber(L, castObjPtr(*oPtr, Entity)->getAngle());
+    return 1;
+}
+
+void Entity::registerLuaGetters(lua_State *L) {
+    static const luaL_Reg getters[] {
+        {"position", luaGetPosition},
+        {"angle", luaGetAngle},
+        {NULL, NULL}
+    };
+
+    Object::registerLuaGetters(L);
+    luaL_setfuncs(L, getters, 0);
+}
+
+// ==================================== [[ LUA SETTERS ]] ====================================
+
+static int luaSetPosition(lua_State *L) {
+    ObjectPtr *oPtr = Object::grabLua(L, 1, LIBNAME);
+    TypePtr *tPtr = Type::grabLua(L, 1, "Vec2");
+
+    if (oPtr != nullptr && tPtr != nullptr)
+        castObjPtr(*oPtr, Entity)->setPosition(*(castTypePtr(*tPtr, Vec2)));
+
+    return 0;
+}
+
+static int luaSetAngle(lua_State *L) {
+    ObjectPtr *oPtr = Object::grabLua(L, 1, LIBNAME);
+    lua_Number newAngle = luaL_checknumber(L, 2);
+
+    if (oPtr != nullptr)
+        castObjPtr(*oPtr, Entity)->setAngle(newAngle);
+
+    return 0;
+}
+
+void Entity::registerLuaSetters(lua_State *L) {
+    static const luaL_Reg setters[] {
+        {"position", luaSetPosition},
+        {"angle", luaSetAngle},
+        {NULL, NULL}
+    };
+
+    Object::registerLuaSetters(L);
+    luaL_setfuncs(L, setters, 0);
+}
+
+// ==================================== [[ LUA METHODS ]] ====================================
+
+void Entity::registerLuaMethods(lua_State *L) {
+    static const luaL_Reg methods[] {
+        {NULL, NULL}
+    };
+
+    Object::registerLuaMethods(L);
+    luaL_setfuncs(L, methods, 0);
+}
+
+void Entity::registerLuaChild(lua_State *L) {
+    Object::registerLuaChild(L);
+    lua_pushstring(L, LIBNAME);
+    lua_pushboolean(L, true);
+    lua_rawset(L, -3); // adds "Entity" to the child table
+}
+
+void Entity::addBindings(lua_State *L) {
+    registerClass(L, registerLuaSetters, registerLuaGetters, registerLuaMethods, registerLuaChild, LIBNAME);
 }

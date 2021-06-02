@@ -27,12 +27,15 @@ class Object : public std::enable_shared_from_this<Object> {
 protected:
     std::unordered_set<ObjectPtr> children;
     std::string name;
+    std::string className;
     ObjectPtr parent = nullptr;
     ObjectPtr root = nullptr;
     iOBJTYPE typeFlags = 0;
 
     void addChild(ObjectPtr);
     void removeChild(ObjectPtr);
+
+    void pushRawLua(lua_State *L, const char *libname);
 
     // events
     virtual void onParentRemove(); // called before child is removed from parent
@@ -46,6 +49,7 @@ public:
     void setParent(ObjectPtr);
 
     std::string getName();
+    std::string getClassName();
     ObjectPtr getParent();
     std::unordered_set<ObjectPtr> getChildren();
     ObjectPtr findChild(std::string name);

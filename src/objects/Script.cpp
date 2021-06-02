@@ -1,4 +1,7 @@
 #include "core/Object.hpp"
+#include "core/Entity.hpp"
+#include "types/Type.hpp"
+#include "types/Vec2.hpp"
 #include "objects/Script.hpp"
 
 Script::Script() {
@@ -7,6 +10,9 @@ Script::Script() {
     state = luaL_newstate();
     luaopen_base(state);
     Object::addBindings(state);
+    Entity::addBindings(state);
+    Type::addBindings(state);
+    Vec2::addBindings(state);
 }
 
 // temp
