@@ -5,6 +5,7 @@
 #include "services/PhysicsService.hpp"
 #include "services/RenderService.hpp"
 #include "services/TaskService.hpp"
+#include "services/ScriptService.hpp"
 
 Root::Root(): Object() {
     name = "Root";
@@ -75,6 +76,9 @@ Service* Root::getService(SRVICETYPE srvc) {
             break;
         case TASKSRV:
             newSrvc = new TaskService(shared_from_this());
+            break;
+        case SCRIPTSRV:
+            newSrvc = new ScriptService(shared_from_this());
             break;
         default:
             return nullptr;

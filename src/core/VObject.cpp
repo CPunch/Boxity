@@ -19,8 +19,10 @@ _passVOPREvnt:
 }
 
 void VObject::onParentAdd() {
-    if (root == nullptr)
+    if (root == nullptr) {
+        rSrvc = nullptr;
         goto _passVOPAEvnt;
+    }
 
     // grab the render service
     rSrvc = (RenderService*)castObjPtr(root, Root)->getService(RENDERSRV);

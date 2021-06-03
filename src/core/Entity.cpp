@@ -33,9 +33,10 @@ _rmvBody:
 
 void Entity::onParentAdd() {
     // sanity check
-    if (root == nullptr)
+    if (root == nullptr) {
+        pSrvc = nullptr;
         goto _passEOPAEvnt;
-
+    }
 
     // grab the physics service & then create our new body
     pSrvc = (PhysicsService*)castObjPtr(root, Root)->getService(PHYSICSRV);

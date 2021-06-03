@@ -1,3 +1,4 @@
+#include "core/Root.hpp"
 #include "core/Object.hpp"
 #include "core/Entity.hpp"
 #include "types/Type.hpp"
@@ -6,20 +7,28 @@
 
 Script::Script() {
     name = "Script";
+}
 
-    state = luaL_newstate();
-    luaopen_base(state);
-    Object::addBindings(state);
-    Entity::addBindings(state);
-    Type::addBindings(state);
-    Vec2::addBindings(state);
+void Script::onParentAdd() {
+    if (root == nullptr) 
+        goto _passSOPAEvnt;
+
+    scrSrvc = (ScriptService*)castObjPtr(root, Root)->getService(SCRIPTSRV);
+    state = scrSrvc->newThread();
+
+_passSOPAEvnt:
+    Object::onParentAdd();
+}
+
+void Script::onParentRemove() {
+    // stubbed for now
+    Object::onParentRemove();
 }
 
 // temp
 void Script::run(std::string script) {
-    // push root and set the global
-    root->pushLua(state);
-    lua_setglobal(state, "root");
+    if (state == nullptr)
+        return;
 
     luaL_loadstring(state, script.c_str());
     lua_call(state, 0, 0);
