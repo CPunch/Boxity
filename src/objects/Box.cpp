@@ -2,6 +2,7 @@
 
 Box::Box(): Entity() {
     name = "Box";
+    classType = OBJ_BOX;
 
     shape.setFillColor(sf::Color::Black);
 }

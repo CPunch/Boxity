@@ -74,6 +74,10 @@ iOBJTYPE Object::getTypeFlags() {
     return typeFlags;
 }
 
+OBJCLASS Object::getClass() {
+    return classType;
+}
+
 std::unordered_set<ObjectPtr> Object::getChildren() {
     return children;
 }

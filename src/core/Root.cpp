@@ -9,6 +9,7 @@
 
 Root::Root(): Object() {
     name = "Root";
+    classType = OBJ_ROOT;
 
     // set our object feature flags
     addFlag(typeFlags, RENDEROBJ);

@@ -8,7 +8,6 @@ extern "C" {
 
 typedef void (*registerLuaTable)(lua_State*);
 
-
 #define yieldCall(state, nargs) \
     int _retCode = lua_resume(state, nargs); \
     if (_retCode != 0 && _retCode != LUA_YIELD) \

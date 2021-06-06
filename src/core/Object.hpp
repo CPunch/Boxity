@@ -13,6 +13,14 @@ enum OBJTYPE {
     ENTITYOBJ  = 2
 };
 
+enum OBJCLASS {
+    OBJ_ROOT,
+    OBJ_BALL,
+    OBJ_BOX,
+    OBJ_SCRIPT,
+    OBJ_INCOMPMAX // incomplete class type
+};
+
 class Object;
 typedef std::shared_ptr<Object> ObjectPtr;
 typedef uint8_t iOBJTYPE;
@@ -31,6 +39,7 @@ protected:
     ObjectPtr parent = nullptr;
     ObjectPtr root = nullptr;
     iOBJTYPE typeFlags = 0;
+    OBJCLASS classType = OBJ_INCOMPMAX;
 
     void addChild(ObjectPtr);
     void removeChild(ObjectPtr);
@@ -54,6 +63,7 @@ public:
     std::unordered_set<ObjectPtr> getChildren();
     ObjectPtr findChild(std::string name);
     iOBJTYPE getTypeFlags();
+    OBJCLASS getClass();
     virtual ObjectPtr getRoot();
 
     void remove();

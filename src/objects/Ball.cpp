@@ -2,6 +2,7 @@
 
 Ball::Ball(): Entity() {
     name = "Ball";
+    classType = OBJ_BALL;
 
     shape.setFillColor(sf::Color::Black);
     setRadius(10.0f);

@@ -1,12 +1,10 @@
 #include "core/Root.hpp"
-#include "core/Object.hpp"
-#include "core/Entity.hpp"
-#include "types/Type.hpp"
-#include "types/Vec2.hpp"
+#include "services/ScriptService.hpp"
 #include "objects/Script.hpp"
 
 Script::Script() {
     name = "Script";
+    classType = OBJ_SCRIPT;
 }
 
 void Script::onParentAdd() {
