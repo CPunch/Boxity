@@ -23,4 +23,7 @@ public:
     void render(sf::RenderWindow*);
 
     void tick(uint64_t);
+
+    static void addBindings(lua_State*);
+    void pushLua(lua_State*);
 };

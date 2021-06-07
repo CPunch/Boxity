@@ -71,7 +71,7 @@ public:
 
     // lua stuff
     static void addBindings(lua_State*);
-    virtual void pushLua(lua_State *L);
+    virtual void pushLua(lua_State*);
     static ObjectPtr* grabLua(lua_State *L, int indx, const char *classname);
 
     static void registerLuaGetters(lua_State*);

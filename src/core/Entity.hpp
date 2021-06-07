@@ -42,7 +42,7 @@ public:
     void tick(uint64_t);
 
     static void addBindings(lua_State*);
-    virtual void pushLua(lua_State *L);
+    virtual void pushLua(lua_State*);
 
     static void registerLuaGetters(lua_State*);
     static void registerLuaSetters(lua_State*);

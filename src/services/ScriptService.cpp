@@ -3,6 +3,7 @@
 #include "core/Object.hpp"
 #include "core/Entity.hpp"
 #include "core/ObjectFactory.hpp"
+#include "objects/Ball.hpp"
 #include "types/Type.hpp"
 #include "types/Vec2.hpp"
 
@@ -13,6 +14,7 @@ ScriptService::ScriptService(ObjectPtr r): Service(r) {
     ObjectFactory::addBindings(globalState);
     Object::addBindings(globalState);
     Entity::addBindings(globalState);
+    Ball::addBindings(globalState);
     Type::addBindings(globalState);
     Vec2::addBindings(globalState);
 

@@ -301,7 +301,7 @@ void Object::registerLuaGetters(lua_State *L) {
 
 static int luaSetParent(lua_State *L) {
     ObjectPtr *oPtr = Object::grabLua(L, 1, LIBNAME);
-    ObjectPtr *newParent = Object::grabLua(L, 1, LIBNAME);
+    ObjectPtr *newParent = Object::grabLua(L, 2, LIBNAME);
 
     // sanity check
     if (oPtr != nullptr) {

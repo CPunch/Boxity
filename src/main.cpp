@@ -17,13 +17,9 @@ int main() {
     ground->setAnchored(true);
     ground->setParent(root);
 
-    std::shared_ptr<Ball> b = std::make_shared<Ball>(10.0f, Vec2(200, 100));
-    b->setAnchored(false);
-    b->setParent(root);
-
     std::shared_ptr<Script> scrpt = std::make_shared<Script>();
     scrpt->setParent(root);
-    scrpt->run("print(root.Box.position.x)");
+    scrpt->run("ball = Factory.new(\"Ball\") ball.position.x = 200 ball.position.y = 100 ball.radius = 10 ball.parent = root");
 
     while (rSrvc->isOpen()) {
         rSrvc->pollEvents();

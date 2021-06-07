@@ -13,6 +13,8 @@ private:
     void prerender();
     void update();
 
+    static ObjectPtr createBall();
+
 public:
     Ball();
     Ball(float radi, Vec2 pos);
@@ -22,4 +24,7 @@ public:
     float getRadius();
 
     void render(sf::RenderWindow*);
+
+    static void addBindings(lua_State*);
+    void pushLua(lua_State*);
 };
