@@ -176,10 +176,22 @@ static int luaGetAngle(lua_State *L) {
     return 1;
 }
 
+static int luaGetAnchored(lua_State *L) {
+    ObjectPtr *oPtr = Object::grabLua(L, 1, LIBNAME);
+
+    if (oPtr == nullptr)
+        return 0;
+
+    // push anchored & return
+    lua_pushboolean(L, castObjPtr(*oPtr, Entity)->getAnchored());
+    return 1;
+}
+
 void Entity::registerLuaGetters(lua_State *L) {
     static const luaL_Reg getters[] {
         {"position", luaGetPosition},
         {"angle", luaGetAngle},
+        {"anchored", luaGetAnchored},
         {NULL, NULL}
     };
 
@@ -209,10 +221,19 @@ static int luaSetAngle(lua_State *L) {
     return 0;
 }
 
+static int luaSetAnchored(lua_State *L) {
+    ObjectPtr *oPtr = Object::grabLua(L, 1, LIBNAME);
+    bool newAnchor = lua_toboolean(L, 2);
+
+    if (oPtr != nullptr)
+        castObjPtr(*oPtr, Entity)->setAnchored(newAnchor);
+}
+
 void Entity::registerLuaSetters(lua_State *L) {
     static const luaL_Reg setters[] {
         {"position", luaSetPosition},
         {"angle", luaSetAngle},
+        {"anchored", luaSetAnchored},
         {NULL, NULL}
     };
 
