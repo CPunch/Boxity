@@ -6,7 +6,7 @@
 
 RenderService::RenderService(ObjectPtr r): Service(r) {
     srvType = RENDERSRV;
-    window = new sf::RenderWindow(sf::VideoMode(400, 500), "SimpleNgi");
+    window = new sf::RenderWindow(sf::VideoMode(400, 500), "Boxity");
     //window->setFramerateLimit(60);
 
     std::cout << "RenderService loaded!" << std::endl;
@@ -18,7 +18,12 @@ void RenderService::addRenderable(ObjectPtr o) {
 }
 
 void RenderService::removeRenderable(ObjectPtr o) {
-    rndrList.erase(o);
+    for (auto it = rndrList.begin(); it != rndrList.end(); it++) {
+        if ((*it).get() == o.get()) {
+            rndrList.erase(it);
+            return;
+        }
+    }
 }
 
 void RenderService::render() {

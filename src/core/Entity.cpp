@@ -227,6 +227,8 @@ static int luaSetAnchored(lua_State *L) {
 
     if (oPtr != nullptr)
         castObjPtr(*oPtr, Entity)->setAnchored(newAnchor);
+
+    return 0;
 }
 
 void Entity::registerLuaSetters(lua_State *L) {

@@ -9,7 +9,9 @@ Object::Object() {
     className = LIBNAME;
 }
 
-Object::~Object() {}
+Object::~Object() {
+    std::cout << "Object " << this << " (" << name << ") freed!" << std::endl;
+}
 
 void Object::onParentRemove() {
     // let the children know
@@ -36,11 +38,15 @@ void Object::setParent(ObjectPtr p) {
     if (p.get() == parent.get())
         return;
 
+    //std::cout << "Object " << this << " (" << name << ")'s parent set to " << p.get() << " (" << ((p != nullptr) ? p->getName() : "nil") << ")" << std::endl;
+
     ObjectPtr oldP = parent;
     parent = p;
 
     onParentRemove();
 
+    // clear the root cache & THEN call getRoot
+    root = nullptr;
     root = getRoot();
 
     // add ourselves to our new parent
@@ -391,8 +397,22 @@ void Object::registerClass(lua_State* L, registerLuaTable setterTbl, registerLua
     lua_pop(L, 1);
 }
 
+// ==================================== [[ LUA METHODS ]] ====================================
+
+static int luaRemoveObj(lua_State *L) {
+    ObjectPtr *oPtr = Object::grabLua(L, 1, LIBNAME);
+
+    if (oPtr == nullptr)
+        return 0;
+
+    castObjPtr(*oPtr, Object)->remove();
+    return 0;
+}
+
+
 void Object::registerLuaMethods(lua_State *L) {
     static const luaL_Reg methods[] {
+        {"remove", luaRemoveObj},
         {NULL, NULL}
     };
 
