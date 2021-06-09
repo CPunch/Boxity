@@ -156,7 +156,24 @@ void v2registerLuaMethods(lua_State *L) {
     luaL_setfuncs(L, methods, 0);
 }
 
+static int vec2New(lua_State *L) {
+    lua_Number x = luaL_optnumber(L, 1, 0);
+    lua_Number y = luaL_optnumber(L, 2, 0);
+
+    auto newVec = std::make_shared<Vec2>(x, y);
+    newVec->pushLua(L);
+    return 1;
+}
+
+static const luaL_Reg libMethods[] = {
+    {"new", vec2New},
+    {NULL, NULL}
+};
 
 void Vec2::addBindings(lua_State *L) {
     Type::registerClass(L, v2registerLuaSetters, v2registerLuaGetters, v2registerLuaMethods, LIBNAME);
+
+    // register the constructor
+    luaL_newlib(L, libMethods);
+    lua_setglobal(L, "Vec2");
 }

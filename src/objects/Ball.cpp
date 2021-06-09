@@ -6,6 +6,7 @@
 
 Ball::Ball(): Entity() {
     name = "Ball";
+    className = LIBNAME;
     classType = OBJ_BALL;
 
     shape.setFillColor(sf::Color::Black);

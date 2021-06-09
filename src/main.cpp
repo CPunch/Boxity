@@ -19,7 +19,7 @@ int main() {
 
     std::shared_ptr<Script> scrpt = std::make_shared<Script>();
     scrpt->setParent(root);
-    scrpt->run("ball = Factory.new(\"Ball\") ball.position.x = 200 ball.position.y = 100 ball.radius = 10 ball.parent = root");
+    scrpt->run("ball = Factory.new(\"Ball\") ball.position = Vec2.new(200, 100) ball.radius = 10 ball.parent = root");
 
     while (rSrvc->isOpen()) {
         rSrvc->pollEvents();
