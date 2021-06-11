@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.13)
-project(SimplEngi)
+project(Boxity)
 
 set(CMAKE_CXX_STANDARD 17)
 
@@ -14,7 +14,7 @@ set(CMAKE_VERBOSE_MAKEFILE on)
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
 # Set the project as the default startup project fodr VS
-set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT simplengi)
+set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT boxity)
 
 # find sfml
 #set(SFML_STATIC_LIBRARIES TRUE)
@@ -29,10 +29,10 @@ file(GLOB_RECURSE SOURCES src/**.[ch]pp)
 # add lua
 add_subdirectory(${PROJECT_SOURCE_DIR}/cmake-modules/Lua)
 
-add_executable(simplengi ${SOURCES})
-target_link_libraries(simplengi lua_static sfml-graphics sfml-audio box2d)
-add_sanitizers(simplengi)
-set_target_properties(simplengi PROPERTIES OUTPUT_NAME simplengi)
+add_executable(boxity ${SOURCES})
+target_link_libraries(boxity lua_static sfml-graphics sfml-audio box2d)
+add_sanitizers(boxity)
+set_target_properties(boxity PROPERTIES OUTPUT_NAME boxity)
 
 # Makes it so config, tdata, etc. get picked up when starting via the debugger in VS
-set_property(TARGET simplengi PROPERTY VS_DEBUGGER_WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}")
+set_property(TARGET boxity PROPERTY VS_DEBUGGER_WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}")

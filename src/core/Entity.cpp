@@ -203,7 +203,7 @@ void Entity::registerLuaGetters(lua_State *L) {
 
 static int luaSetPosition(lua_State *L) {
     ObjectPtr *oPtr = Object::grabLua(L, 1, LIBNAME);
-    TypePtr *tPtr = Type::grabLua(L, 1, "Vec2");
+    TypePtr *tPtr = Type::grabLua(L, 2, "Vec2");
 
     if (oPtr != nullptr && tPtr != nullptr)
         castObjPtr(*oPtr, Entity)->setPosition(*(castTypePtr(*tPtr, Vec2)));

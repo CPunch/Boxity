@@ -14,7 +14,7 @@ protected:
     std::string classname;
     bool updated;
 
-    static void pushRawLua(lua_State *L, TypePtr tPtr, const char *meta);
+    void pushRawLua(lua_State *L, const char *meta);
 
 public:
     Type();

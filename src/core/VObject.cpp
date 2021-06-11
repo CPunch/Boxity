@@ -2,6 +2,8 @@
 #include "core/VObject.hpp"
 #include "services/RenderService.hpp"
 
+#include <iostream>
+
 VObject::VObject() {
     addFlag(typeFlags, RENDEROBJ);
 }
@@ -21,14 +23,17 @@ _passVOPREvnt:
 void VObject::onParentAdd() {
     if (root == nullptr) {
         rSrvc = nullptr;
+        std::cout << "skipping VOPAEvnt" << std::endl;
         goto _passVOPAEvnt;
     }
 
     // grab the render service
     rSrvc = (RenderService*)castObjPtr(root, Root)->getService(RENDERSRV);
 
-    if (rSrvc == nullptr)
+    if (rSrvc == nullptr) {
+        std::cout << "skipping VOPAEvnt (rSrvc null)" << std::endl;
         goto _passVOPAEvnt;
+    }
 
     rSrvc->addRenderable(shared_from_this());
 

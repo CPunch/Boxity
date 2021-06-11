@@ -9,15 +9,17 @@ RenderService::RenderService(ObjectPtr r): Service(r) {
     window = new sf::RenderWindow(sf::VideoMode(400, 500), "Boxity");
     //window->setFramerateLimit(60);
 
-    std::cout << "RenderService loaded!" << std::endl;
+    std::cout << "RenderService Loaded!" << std::endl;
 }
 
 void RenderService::addRenderable(ObjectPtr o) {
+    std::cout << "Object " << o.get() << " (" << o->getName() << ") being added to renderList!" << std::endl;
     assert(isRenderable(o));
     rndrList.insert(o);
 }
 
 void RenderService::removeRenderable(ObjectPtr o) {
+    std::cout << "Object " << o.get() << " (" << o->getName() << ") being removed from renderList!" << std::endl;
     for (auto it = rndrList.begin(); it != rndrList.end(); it++) {
         if ((*it).get() == o.get()) {
             rndrList.erase(it);

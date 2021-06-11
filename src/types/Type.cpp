@@ -20,7 +20,7 @@ void Type::setUpdated(bool u) {
 
 // ==================================== [[ LUA ]] ====================================
 
-void Type::pushLua(lua_State *L) {
+void Type::pushRawLua(lua_State *L, const char *meta) {
     // create a shared_ptr userdata on the lua heap
     void *tPtr = lua_newuserdata(L, sizeof(TypePtr));
 
@@ -32,8 +32,12 @@ void Type::pushLua(lua_State *L) {
     new(tPtr) TypePtr(shared_from_this());
 
     // set the udata's metatable
-    luaL_getmetatable(L, LIBNAME);
+    luaL_getmetatable(L, meta);
     lua_setmetatable(L, -2);
+}
+
+void Type::pushLua(lua_State *L) {
+    pushRawLua(L, LIBNAME);
 }
 
 TypePtr* Type::grabLua(lua_State* L, int indx, const char *classname) {
@@ -42,12 +46,18 @@ TypePtr* Type::grabLua(lua_State* L, int indx, const char *classname) {
         return nullptr;
 
     // check if the classname is in the __typeclass table
-    lua_getmetatable(L, 1);
+    lua_getmetatable(L, indx);
     lua_getfield(L, -1, "__typeclass");
+    if (lua_isnil(L, -1)) { // "__typeclass" wasn't found?
+        lua_pop(L, 2); // pop nil & metatable
+        luaL_error(L, "Expected type '%s'!", classname);
+        return nullptr;
+    }
+
     lua_getfield(L, -1, classname);
     if (lua_isnil(L, -1)) { // the classname wasn't in __typeclass!
         lua_pop(L, 3); // pop nil, __typeclass & metatable
-
+        luaL_error(L, "Expected type '%s'!", classname);
         return nullptr;
     }
 

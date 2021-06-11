@@ -12,7 +12,7 @@ PhysicsService::PhysicsService(ObjectPtr r): Service(r) {
     gravity = b2Vec2(0, 10.0f);
     pWorld = new b2World(gravity);
 
-    std::cout << "PhysicsService loaded!" << std::endl;
+    std::cout << "PhysicsService Loaded!" << std::endl;
 }
 
 PhysicsService::~PhysicsService() {

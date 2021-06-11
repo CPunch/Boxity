@@ -8,7 +8,7 @@
             "name": "build & debug",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/bin/simplengi",
+            "program": "${workspaceFolder}/bin/boxity",
             "args": [],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",

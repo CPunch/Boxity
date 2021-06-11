@@ -62,19 +62,7 @@ void Vec2::setY(float _y) {
 // ==================================== [[ LUA ]] ====================================
 
 void Vec2::pushLua(lua_State *L) {
-    // create a shared_ptr userdata on the lua heap
-    void *tPtr = lua_newuserdata(L, sizeof(TypePtr));
-
-    // handle error
-    if (tPtr == NULL)
-        return;
-
-    // use the new operator to increase our reference count of this shared_ptr
-    new(tPtr) TypePtr(shared_from_this());
-
-    // set the udata's metatable
-    luaL_getmetatable(L, LIBNAME);
-    lua_setmetatable(L, -2);
+    pushRawLua(L, LIBNAME);
 }
 
 // ==================================== [[ LUA GETTERS ]] ====================================

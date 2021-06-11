@@ -38,7 +38,7 @@ void Object::setParent(ObjectPtr p) {
     if (p.get() == parent.get())
         return;
 
-    //std::cout << "Object " << this << " (" << name << ")'s parent set to " << p.get() << " (" << ((p != nullptr) ? p->getName() : "nil") << ")" << std::endl;
+    std::cout << "Object " << this << " (" << name << ")'s parent set to " << p.get() << " (" << ((p != nullptr) ? p->getName() : "nil") << ")" << std::endl;
 
     ObjectPtr oldP = parent;
     parent = p;
@@ -159,12 +159,18 @@ ObjectPtr* Object::grabLua(lua_State *L, int indx, const char *classname) {
         return nullptr;
 
     // check if the classname is in the __childof table
-    lua_getmetatable(L, 1);
+    lua_getmetatable(L, indx);
     lua_getfield(L, -1, "__childof");
+    if (lua_isnil(L, -1)) { // __childof doesn't exist?!
+        lua_pop(L, 2); // pop __childof & metatable
+        luaL_error(L, "Expected Object of type '%s'", classname);
+        return nullptr;
+    }
+
     lua_getfield(L, -1, classname);
     if (lua_isnil(L, -1)) { // the classname wasn't in __childof!
         lua_pop(L, 3); // pop nil, __childof & metatable
-
+        luaL_error(L, "Expected Object of type '%s'", classname);
         return nullptr;
     }
 
