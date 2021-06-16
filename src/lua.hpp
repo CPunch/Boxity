@@ -6,12 +6,16 @@ extern "C" {
 #include "lualib.h"
 }
 
+#include <iostream>
+
 typedef void (*registerLuaTable)(lua_State*);
 
+// 'results' is defined, it'll hold the # of results yielded back to us
 #define yieldCall(state, nargs) \
-    int _retCode = lua_resume(state, nargs); \
+    int results; \
+    int _retCode = lua_resume(state, NULL, nargs, &results); \
     if (_retCode != 0 && _retCode != LUA_YIELD) \
-       LuaManager::printError(lua_tostring(state, -1)); \
+       std::cout << lua_tostring(state, -1) << std::endl; \
 
 inline static int lua_autoPush(lua_State* state, int nargs) {
     // return the number of pushed arguments :)
