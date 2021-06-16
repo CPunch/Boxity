@@ -3,7 +3,7 @@
 #include "core/Service.hpp"
 #include "core/VObject.hpp"
 
-#include <SFML/Graphics.hpp>
+#include <graphics.hpp>
 #include <set>
 
 class RenderService : public Service {

@@ -1,6 +1,6 @@
 #pragma once
 
-#include <SFML/Graphics.hpp>
+#include <graphics.hpp>
 
 #include "core/Entity.hpp"
 #include "types/Vec2.hpp"

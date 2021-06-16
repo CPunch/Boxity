@@ -1,7 +1,5 @@
 #pragma once
 
-#include <SFML/Graphics.hpp>
-#include <box2d/box2d.h>
 #include "lua.hpp"
 #include <string>
 #include <unordered_set>

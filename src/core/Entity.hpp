@@ -1,7 +1,7 @@
 #pragma once
 
-#include <SFML/Graphics.hpp>
-#include <box2d/box2d.h>
+#include <graphics.hpp>
+#include <physics.hpp>
 
 #include "core/VObject.hpp"
 #include "core/Root.hpp"

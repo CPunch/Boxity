@@ -1,5 +1,6 @@
 #pragma once
 
+#include <graphics.hpp>
 #include "core/Object.hpp"
 
 #include <memory>
