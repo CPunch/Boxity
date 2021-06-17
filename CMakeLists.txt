@@ -19,19 +19,21 @@ set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT b
 # find sfml
 #set(SFML_STATIC_LIBRARIES TRUE)
 find_package(SFML 2.5 COMPONENTS graphics audio REQUIRED)
-find_package(Box2D)
 
 # adds address sanitizer support :)
 find_package(Sanitizers)
 
-include_directories(src ${SFML_INCLUDE_DIR})
+include_directories(src ${SFML_INCLUDE_DIR} ${PROJECT_SOURCE_DIR}/cmake-modules/Box2D/include/box2d)
 file(GLOB_RECURSE SOURCES src/**.[ch]pp)
 
 # add lua
 add_subdirectory(${PROJECT_SOURCE_DIR}/cmake-modules/Lua)
 
+# add box2d
+add_subdirectory(${PROJECT_SOURCE_DIR}/cmake-modules/Box2D)
+
 add_executable(boxity ${SOURCES})
-target_link_libraries(boxity lua_static sfml-graphics sfml-audio Box2D)
+target_link_libraries(boxity lua_static sfml-graphics sfml-audio box2d)
 add_sanitizers(boxity)
 set_target_properties(boxity PROPERTIES OUTPUT_NAME boxity)
 
