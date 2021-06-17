@@ -8,7 +8,7 @@ Script::Script() {
 }
 
 void Script::onParentAdd() {
-    if (root == nullptr) 
+    if (root == nullptr || state != nullptr)  // if we already have a state, ignore!
         goto _passSOPAEvnt;
 
     scrSrvc = (ScriptService*)castObjPtr(root, Root)->getService(SCRIPTSRV);
@@ -25,9 +25,9 @@ void Script::onParentRemove() {
 
 // temp
 void Script::run(std::string script) {
-    if (state == nullptr)
+    if (state == nullptr || scrSrvc == nullptr)
         return;
 
     luaL_loadstring(state, script.c_str());
-    lua_call(state, 0, 0);
+    scrSrvc->yieldCall(state, 0);
 }
