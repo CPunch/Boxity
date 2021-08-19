@@ -15,5 +15,5 @@ private:
 public:
     Script();
 
-    void run(std::string script);
+    void setSource(std::string script);
 };

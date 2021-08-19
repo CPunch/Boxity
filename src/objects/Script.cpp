@@ -24,7 +24,7 @@ void Script::onParentRemove() {
 }
 
 // temp
-void Script::run(std::string script) {
+void Script::setSource(std::string script) {
     if (state == nullptr || scrSrvc == nullptr)
         return;
 
