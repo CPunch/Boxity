@@ -137,7 +137,7 @@ void Object::serialize(pugi::xml_node &node) {
 
     // serialize children
     for (ObjectPtr child : children) {
-        pugi::xml_node childNode = node.append_child();
+        pugi::xml_node childNode = node.append_child("Object");
         child->serialize(childNode);
     }
 }

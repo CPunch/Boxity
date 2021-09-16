@@ -2,8 +2,11 @@
 #include "services/ScriptService.hpp"
 #include "objects/Script.hpp"
 
+#define LIBNAME "Script"
+
 Script::Script() {
     name = "Script";
+    className = LIBNAME;
     classType = OBJ_SCRIPT;
 }
 

@@ -4,6 +4,7 @@
 
 Box::Box(): Entity() {
     name = "Box";
+    className = LIBNAME;
     classType = OBJ_BOX;
 
     shape.setFillColor(sf::Color::Black);

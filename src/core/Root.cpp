@@ -56,6 +56,11 @@ void Root::init() {
     ((TaskService*)getService(TASKSRV))->pushTask(Root::tick_task, (void*)this, ROOTTICKTMER, true);
 }
 
+void Root::serializeDoc(pugi::xml_document &doc) {
+    pugi::xml_node rootNode = doc.append_child("root");
+    Object::serialize(rootNode);
+}
+
 // ==================================== [[ GETTERS ]] ====================================
 
 ObjectPtr Root::getRoot() {

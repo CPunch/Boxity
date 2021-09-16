@@ -24,10 +24,7 @@ int main() {
     scrpt->setSource("while true do wait(1) print('making a ball!!!') ball = Factory.new(\"Ball\") ball.position = Vec2.new(200, 100) ball.radius = 10 ball.parent = root end");
 
     pugi::xml_document doc;
-    pugi::xml_node rootNode = doc.append_child();
-
-    root->serialize(rootNode);
-
+    root->serializeDoc(doc);
     doc.save(std::cout);
 
     while (rSrvc->isOpen()) {
