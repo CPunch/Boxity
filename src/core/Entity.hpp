@@ -26,7 +26,6 @@ protected:
 
     bool createBody();
     void updateFixture(b2FixtureDef*);
-
 public:
     Entity();
 
@@ -40,6 +39,7 @@ public:
     b2Body* getBody();
 
     void tick(uint64_t);
+    virtual void serialize(pugi::xml_node &node);
 
     static void addBindings(lua_State*);
     virtual void pushLua(lua_State*);

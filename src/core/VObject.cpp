@@ -42,6 +42,12 @@ _passVOPAEvnt:
     Object::onParentAdd();
 }
 
+void VObject::serialize(pugi::xml_node &node) {
+    node.prepend_attribute("zindex").set_value(zIndx);
+
+    Object::serialize(node);
+}
+
 // ==================================== [[ GETTERS ]] ====================================
 
 int VObject::getZIndex() {

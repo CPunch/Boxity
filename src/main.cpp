@@ -5,6 +5,8 @@
 #include "objects/Ball.hpp"
 #include "objects/Script.hpp"
 
+#include "pugixml.hpp"
+
 #include <iostream>
 
 int main() {
@@ -20,6 +22,13 @@ int main() {
     std::shared_ptr<Script> scrpt = std::make_shared<Script>();
     scrpt->setParent(root);
     scrpt->setSource("while true do wait(1) print('making a ball!!!') ball = Factory.new(\"Ball\") ball.position = Vec2.new(200, 100) ball.radius = 10 ball.parent = root end");
+
+    pugi::xml_document doc;
+    pugi::xml_node rootNode = doc.append_child();
+
+    root->serialize(rootNode);
+
+    doc.save(std::cout);
 
     while (rSrvc->isOpen()) {
         rSrvc->pollEvents();

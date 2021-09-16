@@ -28,6 +28,13 @@ void Script::setSource(std::string script) {
     if (state == nullptr || scrSrvc == nullptr)
         return;
 
+    source = script;
     luaL_loadstring(state, script.c_str());
     scrSrvc->yieldCall(state, 0);
+}
+
+void Script::serialize(pugi::xml_node &node) {
+    node.prepend_attribute("source").set_value(source.c_str());
+
+    Object::serialize(node);
 }

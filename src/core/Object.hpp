@@ -1,8 +1,11 @@
 #pragma once
 
 #include "lua.hpp"
+#include "pugixml.hpp"
+
 #include <string>
 #include <unordered_set>
+#include <map>
 #include <inttypes.h>
 #include <memory>
 
@@ -52,9 +55,11 @@ public:
     Object();
     ~Object();
 
+    // setters
     void setName(std::string);
     void setParent(ObjectPtr);
 
+    // getters
     std::string getName();
     std::string getClassName();
     ObjectPtr getParent();
@@ -66,6 +71,7 @@ public:
 
     void remove();
     virtual void tick(uint64_t);
+    virtual void serialize(pugi::xml_node &node);
 
     // lua stuff
     static void addBindings(lua_State*);

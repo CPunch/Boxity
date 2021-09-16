@@ -47,6 +47,14 @@ _passEOPAEvnt:
     VObject::onParentAdd();
 }
 
+void Entity::serialize(pugi::xml_node &node) {
+    node.prepend_attribute("angle").set_value(angle);
+    node.prepend_attribute("anchored").set_value(anchored);
+
+    // serialize the base class attributes
+    VObject::serialize(node);
+}
+
 // ==================================== [[ SETTERS ]] ====================================
 
 void Entity::setPosition(Vec2 pos) {

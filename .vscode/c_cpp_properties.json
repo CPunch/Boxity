@@ -5,7 +5,8 @@
             "includePath": [
                 "${workspaceFolder}/src",
                 "${workspaceFolder}/cmake-modules/Lua/lua-5.4.3/include",
-                "${workspaceFolder}/cmake-modules/Box2D/include/box2d"
+                "${workspaceFolder}/cmake-modules/Box2D/include/box2d",
+                "${workspaceFolder}/cmake-modules/pugixml/src/"
             ],
             "defines": [],
             "compilerPath": "/usr/bin/clang",

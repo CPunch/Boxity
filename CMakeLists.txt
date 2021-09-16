@@ -8,12 +8,10 @@ set(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake-modules/sanitizers-cmake/cmak
 # Output binaries to the bin folder in the source directory
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin)
 
-set(CMAKE_VERBOSE_MAKEFILE on)
-
 # Put CMake targets (ALL_BUILD/ZERO_CHECK) into a folder
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
-# Set the project as the default startup project fodr VS
+# Set the project as the default startup project for VS
 set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT boxity)
 
 # find sfml
@@ -32,8 +30,11 @@ add_subdirectory(${PROJECT_SOURCE_DIR}/cmake-modules/Lua)
 # add box2d
 add_subdirectory(${PROJECT_SOURCE_DIR}/cmake-modules/Box2D)
 
+# add pugixml
+add_subdirectory(${PROJECT_SOURCE_DIR}/cmake-modules/pugixml)
+
 add_executable(boxity ${SOURCES})
-target_link_libraries(boxity lua_static sfml-graphics sfml-audio box2d)
+target_link_libraries(boxity lua_static sfml-graphics sfml-audio box2d pugixml)
 add_sanitizers(boxity)
 set_target_properties(boxity PROPERTIES OUTPUT_NAME boxity)
 

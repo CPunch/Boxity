@@ -131,6 +131,17 @@ void Object::tick(uint64_t dt) {
     }
 }
 
+void Object::serialize(pugi::xml_node &node) {
+    node.prepend_attribute("name").set_value(name.c_str());
+    node.prepend_attribute("classname").set_value(className.c_str());
+
+    // serialize children
+    for (ObjectPtr child : children) {
+        pugi::xml_node childNode = node.append_child();
+        child->serialize(childNode);
+    }
+}
+
 // ==================================== [[ LUA ]] ====================================
 
 void Object::pushRawLua(lua_State *L, const char *libname) {

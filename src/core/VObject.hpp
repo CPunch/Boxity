@@ -20,5 +20,7 @@ public:
     VObject();
 
     virtual int getZIndex();
+
+    virtual void serialize(pugi::xml_node &node);
     virtual void render(sf::RenderWindow*);
 };
