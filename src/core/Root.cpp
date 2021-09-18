@@ -61,6 +61,11 @@ void Root::serializeDoc(pugi::xml_document &doc) {
     Object::serialize(rootNode);
 }
 
+void Root::deserializeDoc(pugi::xml_document &doc) {
+    pugi::xml_node rootNode = doc.first_child();
+    Object::deserialize(rootNode);
+}
+
 // ==================================== [[ GETTERS ]] ====================================
 
 ObjectPtr Root::getRoot() {

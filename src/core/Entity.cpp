@@ -51,8 +51,26 @@ void Entity::serialize(pugi::xml_node &node) {
     node.prepend_attribute("angle").set_value(angle);
     node.prepend_attribute("anchored").set_value(anchored);
 
+    node.append_attribute("position").set_value(position->toString().c_str());
+
     // serialize the base class attributes
     VObject::serialize(node);
+}
+
+void Entity::deserialize(pugi::xml_node &node) {
+    pugi::xml_attribute attr;
+
+    if (!((attr = node.attribute("angle")).empty()))
+        angle = attr.as_float();
+
+    if (!((attr = node.attribute("anchored")).empty()))
+        anchored = attr.as_bool();
+
+    if (!((attr = node.attribute("position")).empty()))
+        position->fromString(attr.value());
+
+    // deserialize the base class attributes
+    VObject::deserialize(node);
 }
 
 // ==================================== [[ SETTERS ]] ====================================

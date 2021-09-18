@@ -1,4 +1,5 @@
 #include "core/Root.hpp"
+#include "core/ObjectFactory.hpp"
 #include "services/ScriptService.hpp"
 #include "objects/Script.hpp"
 
@@ -26,6 +27,10 @@ void Script::onParentRemove() {
     Object::onParentRemove();
 }
 
+ObjectPtr Script::createScript() {
+    return std::make_shared<Script>();
+}
+
 // temp
 void Script::setSource(std::string script) {
     if (state == nullptr || scrSrvc == nullptr)
@@ -40,4 +45,17 @@ void Script::serialize(pugi::xml_node &node) {
     node.prepend_attribute("source").set_value(source.c_str());
 
     Object::serialize(node);
+}
+
+void Script::deserialize(pugi::xml_node &node) {
+    pugi::xml_attribute attr;
+
+    if (!((attr = node.attribute("source")).empty()))
+        setSource(attr.value());
+
+    Object::deserialize(node);
+}
+
+void Script::addBindings(lua_State*) {
+    ObjectFactory::addObjClass(OBJ_SCRIPT, LIBNAME, createScript);
 }

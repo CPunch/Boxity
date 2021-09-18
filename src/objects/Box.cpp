@@ -1,4 +1,5 @@
 #include "objects/Box.hpp"
+#include "core/ObjectFactory.hpp"
 
 #define LIBNAME "Box"
 
@@ -63,7 +64,29 @@ void Box::tick(uint64_t t) {
     Entity::tick(t);
 }
 
+void Box::serialize(pugi::xml_node &node) {
+    node.prepend_attribute("size").set_value(size->toString().c_str());
+
+    Entity::serialize(node);
+}
+
+void Box::deserialize(pugi::xml_node &node) {
+    pugi::xml_attribute attr;
+
+    if (!((attr = node.attribute("size")).empty())) {
+        Vec2 tmp;
+        if (tmp.fromString(attr.value()))
+            setSize(tmp);
+    }
+
+    Entity::deserialize(node);
+}
+
 // ==================================== [[ LUA ]] ====================================
+
+ObjectPtr Box::createBox() {
+    return std::make_shared<Box>();
+}
 
 void Box::pushLua(lua_State *L) {
     pushRawLua(L, LIBNAME);
@@ -108,4 +131,5 @@ void registerLuaChild(lua_State *L) {
 
 void Box::addBindings(lua_State *L) {
     registerClass(L, registerLuaSetters, registerLuaGetters, registerLuaMethods, registerLuaChild, LIBNAME);
+    ObjectFactory::addObjClass(OBJ_BOX, LIBNAME, createBox);
 }

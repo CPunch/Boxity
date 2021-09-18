@@ -22,6 +22,7 @@ public:
     void tick();
     void init(); // because shared_from_this hates constructors
     void serializeDoc(pugi::xml_document &doc);
+    void deserializeDoc(pugi::xml_document &doc);
 
     ObjectPtr getRoot();
     Service* getService(SRVICETYPE);

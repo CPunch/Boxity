@@ -13,9 +13,14 @@ private:
     void onParentRemove();
     void onParentAdd();
 
+    static ObjectPtr createScript();
+
 public:
     Script();
 
     void setSource(std::string script);
     virtual void serialize(pugi::xml_node &node);
+    virtual void deserialize(pugi::xml_node &node);
+
+    static void addBindings(lua_State*);
 };

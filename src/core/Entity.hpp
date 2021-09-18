@@ -40,6 +40,7 @@ public:
 
     void tick(uint64_t);
     virtual void serialize(pugi::xml_node &node);
+    virtual void deserialize(pugi::xml_node &node);
 
     static void addBindings(lua_State*);
     virtual void pushLua(lua_State*);

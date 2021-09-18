@@ -59,6 +59,23 @@ void Vec2::setY(float _y) {
     setUpdated(true);
 }
 
+std::string Vec2::toString() {
+    return std::to_string(x) + "," + std::to_string(y);
+}
+
+bool Vec2::fromString(std::string str) {
+    size_t yStart = str.find(',') + 1;
+
+    // if it wasn't found, abort!
+    if (yStart == std::string::npos || yStart == str.size())
+        return false;
+
+    setX(strtof(str.c_str(), nullptr)); // should stop parsing whenever it hits ','
+    setY(strtof(str.c_str() + yStart, nullptr));
+
+    return true;
+}
+
 // ==================================== [[ LUA ]] ====================================
 
 void Vec2::pushLua(lua_State *L) {

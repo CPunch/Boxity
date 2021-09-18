@@ -5,6 +5,8 @@
 #include "core/Entity.hpp"
 #include "core/ObjectFactory.hpp"
 #include "objects/Ball.hpp"
+#include "objects/Box.hpp"
+#include "objects/Script.hpp"
 #include "types/Type.hpp"
 #include "types/Vec2.hpp"
 
@@ -61,6 +63,8 @@ ScriptService::ScriptService(ObjectPtr r): Service(r) {
     Object::addBindings(gL);
     Entity::addBindings(gL);
     Ball::addBindings(gL);
+    Box::addBindings(gL);
+    Script::addBindings(gL);
     Type::addBindings(gL);
     Vec2::addBindings(gL);
 

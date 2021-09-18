@@ -27,6 +27,9 @@ public:
     void setX(float);
     void setY(float);
 
+    std::string toString();
+    bool fromString(std::string);
+
     static void addBindings(lua_State*);
     virtual void pushLua(lua_State *L);
 };

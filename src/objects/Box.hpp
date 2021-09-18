@@ -13,12 +13,17 @@ private:
     void prerender();
     void update();
 
+    static ObjectPtr createBox();
+
 public:
     Box();
     Box(Vec2 size, Vec2 pos);
 
     void setSize(Vec2);
     std::shared_ptr<Vec2> getSize();
+
+    virtual void serialize(pugi::xml_node &node);
+    virtual void deserialize(pugi::xml_node &node);
 
     void render(sf::RenderWindow*);
 

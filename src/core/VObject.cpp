@@ -48,6 +48,15 @@ void VObject::serialize(pugi::xml_node &node) {
     Object::serialize(node);
 }
 
+void VObject::deserialize(pugi::xml_node &node) {
+    pugi::xml_attribute attr;
+
+    if (!((attr = node.attribute("zindex")).empty()))
+        zIndx = attr.as_int();
+
+    Object::deserialize(node);
+}
+
 // ==================================== [[ GETTERS ]] ====================================
 
 int VObject::getZIndex() {

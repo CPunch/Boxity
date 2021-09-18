@@ -1,5 +1,4 @@
 #include "objects/Ball.hpp"
-
 #include "core/ObjectFactory.hpp"
 
 #define LIBNAME "Ball"

@@ -1,4 +1,5 @@
 #include "core/Object.hpp"
+#include "core/ObjectFactory.hpp"
 
 #include <iostream>
 
@@ -139,6 +140,34 @@ void Object::serialize(pugi::xml_node &node) {
     for (ObjectPtr child : children) {
         pugi::xml_node childNode = node.append_child("Object");
         child->serialize(childNode);
+    }
+}
+
+void Object::deserialize(pugi::xml_node &node) {
+    pugi::xml_attribute attr;
+
+    if (!((attr = node.attribute("name")).empty()))
+        setName(attr.value());
+
+    // we don't deserialize the classname :p
+
+    // deserialize the children nodes
+    ObjectPtr obj;
+    OBJCLASS objClass;
+    for (pugi::xml_node child: node.children()) {
+        if ((attr = child.attribute("classname")).empty())
+            continue;
+
+        // create the child based on the classname
+        objClass = ObjectFactory::getClass(attr.value());
+
+        if (objClass == OBJ_INCOMPMAX || (obj = ObjectFactory::create(objClass)).get() == nullptr) {
+            std::cerr << "Failed to create object of classname " << attr.value() << " OBJCLASS[" << objClass << "]" << std::endl;
+            continue;
+        }
+
+        obj->setParent(shared_from_this());
+        obj->deserialize(child);
     }
 }
 

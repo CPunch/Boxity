@@ -72,6 +72,7 @@ public:
     void remove();
     virtual void tick(uint64_t);
     virtual void serialize(pugi::xml_node &node);
+    virtual void deserialize(pugi::xml_node &node);
 
     // lua stuff
     static void addBindings(lua_State*);

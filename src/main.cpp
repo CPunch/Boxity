@@ -14,18 +14,11 @@ int main() {
     root->init();
 
     RenderService *rSrvc = (RenderService*)root->getService(RENDERSRV);
-
-    std::shared_ptr<Box> ground = std::make_shared<Box>(Vec2(400, 50), Vec2(200, 400));
-    ground->setAnchored(true);
-    ground->setParent(root);
-
-    std::shared_ptr<Script> scrpt = std::make_shared<Script>();
-    scrpt->setParent(root);
-    scrpt->setSource("while true do wait(1) print('making a ball!!!') ball = Factory.new(\"Ball\") ball.position = Vec2.new(200, 100) ball.radius = 10 ball.parent = root end");
+    root->getService(SCRIPTSRV); // load script service since the deserializer depends on it
 
     pugi::xml_document doc;
-    root->serializeDoc(doc);
-    doc.save(std::cout);
+    doc.load_file("examples/ballstack.bx");
+    root->deserializeDoc(doc);
 
     while (rSrvc->isOpen()) {
         rSrvc->pollEvents();
