@@ -49,6 +49,7 @@ void RenderService::pollEvents() {
             if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
                 std::shared_ptr<Box> b = std::make_shared<Box>(Vec2(20, 20), Vec2(sf::Mouse::getPosition(*window).x, sf::Mouse::getPosition(*window).y));
                 b->setAnchored(true);
+                b->setAngle(180);
                 b->setParent(root);
             } else if (sf::Mouse::isButtonPressed(sf::Mouse::Right)) {
                 std::shared_ptr<Ball> b = std::make_shared<Ball>(10.0f, Vec2(sf::Mouse::getPosition(*window).x, sf::Mouse::getPosition(*window).y));

@@ -60,14 +60,17 @@ void Entity::serialize(pugi::xml_node &node) {
 void Entity::deserialize(pugi::xml_node &node) {
     pugi::xml_attribute attr;
 
-    if (!((attr = node.attribute("angle")).empty()))
-        angle = attr.as_float();
-
     if (!((attr = node.attribute("anchored")).empty()))
-        anchored = attr.as_bool();
+        setAnchored(attr.as_bool());
 
-    if (!((attr = node.attribute("position")).empty()))
-        position->fromString(attr.value());
+    if (!((attr = node.attribute("angle")).empty()))
+        setAngle(attr.as_float());
+
+    if (!((attr = node.attribute("position")).empty())) {
+        Vec2 tmp;
+        if (tmp.fromString(attr.value()))
+            setPosition(tmp);
+    }
 
     // deserialize the base class attributes
     VObject::deserialize(node);
@@ -81,6 +84,7 @@ void Entity::setPosition(Vec2 pos) {
 }
 
 void Entity::setAngle(float a) {
+    std::cout << "setting angle: " << a << std::endl;
     angle = a;
     update();
 }
@@ -132,7 +136,6 @@ bool Entity::createBody() {
     b2BodyDef myBodyDef;
     myBodyDef.type = anchored ? b2_staticBody : b2_dynamicBody;
     myBodyDef.position = position->getBVec();
-    myBodyDef.angle = BOX2DANGLE(angle);
 
     body = wrld->CreateBody(&myBodyDef);
     return true;
@@ -146,7 +149,7 @@ void Entity::updateFixture(b2FixtureDef* fixDef) {
     if (!createBody())
         return;
 
-    body->SetTransform(position->getBVec(), angle);
+    body->SetTransform(position->getBVec(), BOX2DANGLE(angle));
     body->CreateFixture(fixDef);
 }
 

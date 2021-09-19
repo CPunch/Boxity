@@ -7,8 +7,8 @@
 #define SCALE 30.0f
 #define SFML2BOX2D(x) (x)/SCALE
 #define BOX2D2SFML(x) (x)*SCALE
-#define BOX2DANGLE(x) ((x)/b2_pi)*180
-#define SFMLANGLE(x)  180/b2_pi*(x)
+#define BOX2DANGLE(x) ((x)*(b2_pi/180))
+#define SFMLANGLE(x)  ((x)*(180/b2_pi))
 
 class Root : public Object {
     Service* loadedServices[MAXSRV];

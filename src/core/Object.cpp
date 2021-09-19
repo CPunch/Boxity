@@ -11,7 +11,7 @@ Object::Object() {
 }
 
 Object::~Object() {
-    std::cout << "Object " << this << " (" << name << ") freed!" << std::endl;
+    //std::cout << "Object " << this << " (" << name << ") freed!" << std::endl;
 }
 
 void Object::onParentRemove() {
@@ -39,7 +39,7 @@ void Object::setParent(ObjectPtr p) {
     if (p.get() == parent.get())
         return;
 
-    std::cout << "Object " << this << " (" << name << ")'s parent set to " << p.get() << " (" << ((p != nullptr) ? p->getName() : "nil") << ")" << std::endl;
+    //std::cout << "Object " << this << " (" << name << ")'s parent set to " << p.get() << " (" << ((p != nullptr) ? p->getName() : "nil") << ")" << std::endl;
 
     ObjectPtr oldP = parent;
     parent = p;

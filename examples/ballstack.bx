@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
 <root classname="Object" name="Root">
         <Object classname="Script" name="Script" source="while true do wait(1) print('making a ball!!!') ball = Factory.new(&quot;Ball&quot;) ball.position = Vec2.new(200, 100) ball.radius = 10 ball.parent = root end" />
-        <Object classname="Box" name="Box" zindex="-1" anchored="true" angle="0" position="200.000000,400.000000" size="400.000000,50.000000" />
+        <Object classname="Box" name="Box" zindex="-1" anchored="true" angle="170" position="200.000000,400.000000" size="400.000000,50.000000" />
 </root>

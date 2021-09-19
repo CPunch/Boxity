@@ -23,7 +23,6 @@ _passVOPREvnt:
 void VObject::onParentAdd() {
     if (root == nullptr) {
         rSrvc = nullptr;
-        std::cout << "skipping VOPAEvnt" << std::endl;
         goto _passVOPAEvnt;
     }
 
@@ -31,7 +30,6 @@ void VObject::onParentAdd() {
     rSrvc = (RenderService*)castObjPtr(root, Root)->getService(RENDERSRV);
 
     if (rSrvc == nullptr) {
-        std::cout << "skipping VOPAEvnt (rSrvc null)" << std::endl;
         goto _passVOPAEvnt;
     }
 
