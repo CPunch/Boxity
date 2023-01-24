@@ -7,6 +7,8 @@
 #include "services/TaskService.hpp"
 #include "services/ScriptService.hpp"
 
+template <> Root *Singleton<Root>::singleton = nullptr;
+
 Root::Root(): Object() {
     name = "Root";
     classType = OBJ_ROOT;
@@ -14,46 +16,50 @@ Root::Root(): Object() {
     // set our object feature flags
     addFlag(typeFlags, RENDEROBJ);
     addFlag(typeFlags, ENTITYOBJ);
-
-    // initalize the loaded services table
-    for (int i = 0; i < MAXSRV; i++)
-        loadedServices[i] = nullptr;
 }
 
 Root::~Root() {
     // free all of our loaded services
-    for (int i = 0; i < MAXSRV; i++) {
-        if (loadedServices[i] == nullptr)
-            continue;
-
-        delete loadedServices[i];
+    for (Service *srvc : services) {
+        delete srvc;
     }
 }
 
-void Root::tick_task(void* ud, uint64_t currTime, uint64_t realDelta) {
-    Root *root = (Root*)ud;
-    PhysicsService *pSrvc = (PhysicsService*)root->loadedServices[PHYSICSRV];
-
+void Root::tick_task(void *ud, uint64_t currTime, uint64_t realDelta) {
     // if we have a physics service loaded, we need to simulate the physics before calling tick()
-    if (pSrvc != nullptr)
-        pSrvc->pTick(realDelta);
+    if (PhysicsService::isAlive())
+        PhysicsService::getSingleton().pTick(realDelta);
 
     // tick our children
-    for (ObjectPtr child : root->children) {
+    for (ObjectPtr child : Root::getSingleton().children) {
         child->tick(currTime);
     }
 }
 
-void Root::tick() {
+void Root::preFrame() {
     // tick all our services
-    for (int i = 0; i < MAXSRV; i++)
-        if (loadedServices[i] != nullptr)
-            loadedServices[i]->tick();
+    for (Service *srvc : services)
+        srvc->onFrame();
 }
 
 void Root::init() {
     // schedule our tick timer
-    ((TaskService*)getService(TASKSRV))->pushTask(Root::tick_task, (void*)this, ROOTTICKTMER, true);
+    if (!TaskService::isAlive()) {
+        new TaskService();
+        TaskService::getSingleton().pushTask(Root::tick_task, nullptr, ROOTTICKTMER, true);
+    }
+
+    if (!RenderService::isAlive()) {
+        new RenderService();
+    }
+
+    if (!PhysicsService::isAlive()) {
+        new PhysicsService();
+    }
+
+    if (!ScriptService::isAlive()) {
+        new ScriptService();
+    }
 }
 
 void Root::serializeDoc(pugi::xml_document &doc) {
@@ -68,33 +74,14 @@ void Root::deserializeDoc(pugi::xml_document &doc) {
 
 // ==================================== [[ GETTERS ]] ====================================
 
-ObjectPtr Root::getRoot() {
-    return shared_from_this();
+void Root::registerService(Service *srvc) {
+    services.insert(srvc);
 }
 
-Service* Root::getService(SRVICETYPE srvc) {
-    if (loadedServices[srvc] != nullptr)
-        return loadedServices[srvc];
+void Root::unregisterService(Service *srvc) {
+    services.erase(srvc);
+}
 
-    // service isn't loaded, load it
-    Service *newSrvc;
-    switch(srvc) {
-        case RENDERSRV: // stubbed
-            newSrvc = new RenderService(shared_from_this());
-            break;
-        case PHYSICSRV:
-            newSrvc = new PhysicsService(shared_from_this());
-            break;
-        case TASKSRV:
-            newSrvc = new TaskService(shared_from_this());
-            break;
-        case SCRIPTSRV:
-            newSrvc = new ScriptService(shared_from_this());
-            break;
-        default:
-            return nullptr;
-    }
-
-    loadedServices[srvc] = newSrvc;
-    return newSrvc;
+ObjectPtr Root::getRoot() {
+    return shared_from_this();
 }

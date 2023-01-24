@@ -35,20 +35,17 @@ void Object::setName(std::string n) {
 }
 
 void Object::setParent(ObjectPtr p) {
+    ObjectPtr oldP = parent;
+
     // minor optimization
     if (p.get() == parent.get())
         return;
 
     //std::cout << "Object " << this << " (" << name << ")'s parent set to " << p.get() << " (" << ((p != nullptr) ? p->getName() : "nil") << ")" << std::endl;
 
-    ObjectPtr oldP = parent;
-    parent = p;
-
     onParentRemove();
 
-    // clear the root cache & THEN call getRoot
-    root = nullptr;
-    root = getRoot();
+    parent = p;
 
     // add ourselves to our new parent
     if (parent.get() != nullptr) {
@@ -97,14 +94,6 @@ ObjectPtr Object::findChild(std::string _name) {
 
     // error result
     return ObjectPtr(nullptr);
-}
-
-ObjectPtr Object::getRoot() {
-    // return our cached copy of root if we have it :)
-    if (root.get() != nullptr)
-        return root;
-
-    return (parent != nullptr) ? parent->getRoot() : nullptr;
 }
 
 // ==================================== [[ MISC. ]] ====================================

@@ -4,9 +4,9 @@
             "name": "Linux",
             "includePath": [
                 "${workspaceFolder}/src",
-                "${workspaceFolder}/cmake-modules/Lua/lua-5.4.3/include",
-                "${workspaceFolder}/cmake-modules/Box2D/include/box2d",
-                "${workspaceFolder}/cmake-modules/pugixml/src/"
+                "${workspaceFolder}/vendor/Lua/lua-5.4.3/include",
+                "${workspaceFolder}/vendor/Box2D/include/box2d",
+                "${workspaceFolder}/vendor/pugixml/src/"
             ],
             "defines": [],
             "compilerPath": "/usr/bin/clang",

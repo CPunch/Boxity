@@ -8,17 +8,24 @@ inline uint64_t getCurrTime() {
     return std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
 }
 
-TaskService::TaskService(ObjectPtr r): Service(r) {
-    srvType = TASKSRV;
+template <> TaskService *Singleton<TaskService>::singleton = nullptr;
+
+TaskService::TaskService() {
     std::cout << "TaskService Loaded!" << std::endl;
 }
 
 void TaskService::pushTask(TaskCallback callBk, void* userData, uint64_t delta, bool timer) {
     uint64_t currTime = getCurrTime();
-    tasks.push({callBk, userData, currTime+delta, delta, timer});
+    tasks.push((Task){
+        callBk,
+        userData,
+        currTime+delta,
+        delta,
+        timer
+    });
 }
 
-void TaskService::tick() {
+void TaskService::onFrame() {
     uint64_t currTime = getCurrTime();
     Task task;
 

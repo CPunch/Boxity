@@ -11,7 +11,6 @@
 
 class Entity: public VObject {
 protected:
-    PhysicsService *pSrvc = nullptr;
     b2Body *body = nullptr;
     std::shared_ptr<Vec2> position = std::make_shared<Vec2>(0, 0);
     float angle = 0;

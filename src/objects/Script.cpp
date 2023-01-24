@@ -12,11 +12,10 @@ Script::Script() {
 }
 
 void Script::onParentAdd() {
-    if (root == nullptr || state != nullptr)  // if we already have a state, ignore!
+    if (parent == nullptr || state != nullptr)  // if we already have a state, ignore!
         goto _passSOPAEvnt;
 
-    scrSrvc = (ScriptService*)castObjPtr(root, Root)->getService(SCRIPTSRV);
-    state = scrSrvc->newThread();
+    state = ScriptService::getSingleton().newThread();
 
 _passSOPAEvnt:
     Object::onParentAdd();
@@ -33,12 +32,12 @@ ObjectPtr Script::createScript() {
 
 // temp
 void Script::setSource(std::string script) {
-    if (state == nullptr || scrSrvc == nullptr)
+    if (state == nullptr)
         return;
 
     source = script;
     luaL_loadstring(state, script.c_str());
-    scrSrvc->yieldCall(state, 0);
+    ScriptService::getSingleton().yieldCall(state, 0);
 }
 
 void Script::serialize(pugi::xml_node &node) {

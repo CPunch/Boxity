@@ -13,21 +13,18 @@ int main() {
     std::shared_ptr<Root> root = std::make_shared<Root>();
     root->init();
 
-    RenderService *rSrvc = (RenderService*)root->getService(RENDERSRV);
-    root->getService(SCRIPTSRV); // load script service since the deserializer depends on it
-
     pugi::xml_document doc;
     doc.load_file("examples/ballstack.bx");
     root->deserializeDoc(doc);
 
-    while (rSrvc->isOpen()) {
-        rSrvc->pollEvents();
+    while (RenderService::getSingleton().isOpen()) {
+        RenderService::getSingleton().pollEvents();
 
         // tick
-        root->tick();
+        root->preFrame();
 
         // render everything
-        rSrvc->render();
+        RenderService::getSingleton().render();
     }
 
     root->remove();

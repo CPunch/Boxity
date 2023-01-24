@@ -4,10 +4,9 @@
 
 #include <iostream>
 
-PhysicsService::PhysicsService(ObjectPtr r): Service(r) {
-    Root *root = castObjPtr(r, Root);
-    srvType = PHYSICSRV;
+template <> PhysicsService *Singleton<PhysicsService>::singleton = nullptr;
 
+PhysicsService::PhysicsService() {
     // create box2d world
     gravity = b2Vec2(0, 10.0f);
     pWorld = new b2World(gravity);

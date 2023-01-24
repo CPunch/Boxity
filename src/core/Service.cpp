@@ -1,13 +1,16 @@
+#include "core/Root.hpp"
 #include "core/Service.hpp"
 
-Service::Service(ObjectPtr r): root(r) {
-
+Service::Service() {
+    Root::getSingleton().registerService(this);
 }
 
-// ==================================== [[ GETTERS ]] ====================================
-
-SRVICETYPE Service::getServiceType() {
-    return srvType;
+Service::~Service() {
+    Root::getSingleton().unregisterService(this);
 }
 
-void Service::tick() {}
+// ==================================== [[ EVENTS ]] ====================================
+
+// all of these are stubbed, inherited classes should inherit the virtual functions
+
+void Service::onFrame() {}

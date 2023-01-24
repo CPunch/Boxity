@@ -3,7 +3,7 @@ project(Boxity)
 
 set(CMAKE_CXX_STANDARD 17)
 
-set(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake-modules/sanitizers-cmake/cmake" ${CMAKE_MODULE_PATH})
+set(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/vendor/sanitizers-cmake/cmake" ${CMAKE_MODULE_PATH})
 
 # Output binaries to the bin folder in the source directory
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin)
@@ -21,17 +21,17 @@ find_package(SFML 2.5 COMPONENTS graphics audio REQUIRED)
 # adds address sanitizer support :)
 find_package(Sanitizers)
 
-include_directories(src ${SFML_INCLUDE_DIR} ${PROJECT_SOURCE_DIR}/cmake-modules/Box2D/include/box2d)
+include_directories(src ${SFML_INCLUDE_DIR} ${PROJECT_SOURCE_DIR}/vendor/Box2D/include/box2d)
 file(GLOB_RECURSE SOURCES src/**.[ch]pp)
 
 # add lua
-add_subdirectory(${PROJECT_SOURCE_DIR}/cmake-modules/Lua)
+add_subdirectory(${PROJECT_SOURCE_DIR}/vendor/Lua)
 
 # add box2d
-add_subdirectory(${PROJECT_SOURCE_DIR}/cmake-modules/Box2D)
+add_subdirectory(${PROJECT_SOURCE_DIR}/vendor/Box2D)
 
 # add pugixml
-add_subdirectory(${PROJECT_SOURCE_DIR}/cmake-modules/pugixml)
+add_subdirectory(${PROJECT_SOURCE_DIR}/vendor/pugixml)
 
 add_executable(boxity ${SOURCES})
 target_link_libraries(boxity lua_static sfml-graphics sfml-audio box2d pugixml)

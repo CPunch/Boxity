@@ -9,11 +9,10 @@ VObject::VObject() {
 }
 
 void VObject::onParentRemove() {
-    if (rSrvc == nullptr)
+    if (parent == nullptr)
         goto _passVOPREvnt;
 
-    rSrvc->removeRenderable(shared_from_this());
-    rSrvc = nullptr;
+    RenderService::getSingleton().removeRenderable(shared_from_this());
 
 _passVOPREvnt:
     // pass the event down
@@ -21,19 +20,11 @@ _passVOPREvnt:
 }
 
 void VObject::onParentAdd() {
-    if (root == nullptr) {
-        rSrvc = nullptr;
+    if (parent == nullptr) {
         goto _passVOPAEvnt;
     }
 
-    // grab the render service
-    rSrvc = (RenderService*)castObjPtr(root, Root)->getService(RENDERSRV);
-
-    if (rSrvc == nullptr) {
-        goto _passVOPAEvnt;
-    }
-
-    rSrvc->addRenderable(shared_from_this());
+    RenderService::getSingleton().addRenderable(shared_from_this());
 
 _passVOPAEvnt:
     // pass the event down

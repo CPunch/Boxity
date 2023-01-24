@@ -4,8 +4,9 @@
 
 #include <iostream>
 
-RenderService::RenderService(ObjectPtr r): Service(r) {
-    srvType = RENDERSRV;
+template <> RenderService *Singleton<RenderService>::singleton = nullptr;
+
+RenderService::RenderService() {
     window = new sf::RenderWindow(sf::VideoMode(400, 500), "Boxity");
     //window->setFramerateLimit(60);
 
@@ -49,12 +50,11 @@ void RenderService::pollEvents() {
             if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
                 std::shared_ptr<Box> b = std::make_shared<Box>(Vec2(20, 20), Vec2(sf::Mouse::getPosition(*window).x, sf::Mouse::getPosition(*window).y));
                 b->setAnchored(true);
-                b->setAngle(180);
-                b->setParent(root);
+                b->setParent(Root::getSingleton().getRoot());
             } else if (sf::Mouse::isButtonPressed(sf::Mouse::Right)) {
                 std::shared_ptr<Ball> b = std::make_shared<Ball>(10.0f, Vec2(sf::Mouse::getPosition(*window).x, sf::Mouse::getPosition(*window).y));
                 b->setAnchored(false);
-                b->setParent(root);
+                b->setParent(Root::getSingleton().getRoot());
             }
         }
     }

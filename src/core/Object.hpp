@@ -38,7 +38,6 @@ protected:
     std::string name;
     std::string className;
     ObjectPtr parent = nullptr;
-    ObjectPtr root = nullptr;
     iOBJTYPE typeFlags = 0;
     OBJCLASS classType = OBJ_INCOMPMAX;
 
@@ -67,7 +66,6 @@ public:
     ObjectPtr findChild(std::string name);
     iOBJTYPE getTypeFlags();
     OBJCLASS getClass();
-    virtual ObjectPtr getRoot();
 
     void remove();
     virtual void tick(uint64_t);

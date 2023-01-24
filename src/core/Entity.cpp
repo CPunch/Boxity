@@ -12,19 +12,11 @@ Entity::Entity(): VObject() {
 }
 
 void Entity::onParentRemove() {
-    b2World *wrld;
-
-    // sanity check
-    if (pSrvc == nullptr)
-        goto _rmvBody;
-
-    wrld = pSrvc->getWorld();
-
     // if we already have a body, destroy it
-    if (body != nullptr)
-        wrld->DestroyBody(body);
+    if (body != nullptr) {
+        PhysicsService::getSingleton().getWorld()->DestroyBody(body);
+    }
 
-_rmvBody:
     body = nullptr;
 
     // pass the event down
@@ -33,13 +25,11 @@ _rmvBody:
 
 void Entity::onParentAdd() {
     // sanity check
-    if (root == nullptr) {
-        pSrvc = nullptr;
+    if (parent.get() == nullptr) {
         goto _passEOPAEvnt;
     }
 
-    // grab the physics service & then create our new body
-    pSrvc = (PhysicsService*)castObjPtr(root, Root)->getService(PHYSICSRV);
+    // create our new body
     update();
 
 _passEOPAEvnt:
@@ -122,11 +112,7 @@ void Entity::prerender() {}
 void Entity::update() {}
 
 bool Entity::createBody() {
-    // sanity check
-    if (pSrvc == nullptr)
-        return false;
-
-    b2World *wrld = pSrvc->getWorld();
+    b2World *wrld = PhysicsService::getSingleton().getWorld();
 
     // if we already have a body, destroy it
     if (body != nullptr)

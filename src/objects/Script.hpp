@@ -6,7 +6,6 @@
 class Script : public Object {
 private:
     lua_State *state = nullptr;
-    ScriptService *scrSrvc = nullptr;
     std::string source;
 
     // custom events

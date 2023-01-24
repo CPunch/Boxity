@@ -10,7 +10,6 @@ class RenderService;
 // visible object
 class VObject : public Object {
 protected:
-    RenderService *rSrvc = nullptr;
     int zIndx = -1;
 
     virtual void onParentRemove();

@@ -1,12 +1,12 @@
-[submodule "cmake-modules/sanitizers-cmake"]
-	path = cmake-modules/sanitizers-cmake
+[submodule "vendor/sanitizers-cmake"]
+	path = vendor/sanitizers-cmake
 	url = https://github.com/arsenm/sanitizers-cmake.git
-[submodule "cmake-modules/Lua"]
-	path = cmake-modules/Lua
+[submodule "vendor/Lua"]
+	path = vendor/Lua
 	url = https://github.com/walterschell/Lua.git
-[submodule "cmake-modules/Box2D"]
-	path = cmake-modules/Box2D
+[submodule "vendor/Box2D"]
+	path = vendor/Box2D
 	url = https://github.com/erincatto/box2d
-[submodule "cmake-modules/pugixml"]
-	path = cmake-modules/pugixml
+[submodule "vendor/pugixml"]
+	path = vendor/pugixml
 	url = https://github.com/zeux/pugixml.git

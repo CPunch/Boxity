@@ -1,24 +1,11 @@
 #pragma once
 
-#include "core/Object.hpp"
+#include "core/Singleton.hpp"
 
-enum SRVICETYPE {
-    RENDERSRV,
-    PHYSICSRV,
-    TASKSRV,
-    SCRIPTSRV,
-    MAXSRV
-};
-
-class Root;
 class Service {
-protected:
-    SRVICETYPE srvType;
-    ObjectPtr root;
-
 public:
-    Service(ObjectPtr root);
+    Service();
+    ~Service();
 
-    SRVICETYPE getServiceType();
-    virtual void tick();
+    virtual void onFrame();
 };
