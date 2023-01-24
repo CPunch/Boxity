@@ -28,6 +28,8 @@ file(GLOB_RECURSE SOURCES src/**.[ch]pp)
 add_subdirectory(${PROJECT_SOURCE_DIR}/vendor/Lua)
 
 # add box2d
+option(BOX2D_BUILD_UNIT_TESTS "" OFF)
+option(BOX2D_BUILD_TESTBED "" OFF)
 add_subdirectory(${PROJECT_SOURCE_DIR}/vendor/Box2D)
 
 # add pugixml
